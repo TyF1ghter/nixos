@@ -1,0 +1,35 @@
+# NixOS build results
+result
+result-*
+
+# Hardware configuration (generated per-host)
+# Uncomment if you don't want to track hardware configs
+# hosts/*/hardware-configuration.nix
+
+# Editor/IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Nix development shells
+.direnv/
+.envrc
+
+# Temporary files
+*.tmp
+*.bak
+*.old
+
+# Secrets (if you use any)
+secrets/
+*.age
+*.gpg
+
+# Home manager result links
+.home-manager-backup/
+
+# System links
+/etc

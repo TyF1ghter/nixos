@@ -1,0 +1,50 @@
+{ inputs, config, pkgs, lib, ... }:
+
+{
+  imports = [
+    inputs.nix4nvchad.homeManagerModule
+    ./homemanager/nvchad.nix
+    ./homemanager/terminal.nix
+    ./homemanager/browsers.nix
+    ./homemanager/desktop-apps.nix
+    ./homemanager/wayland.nix
+    ./homemanager/stylix.nix
+  ];
+
+  # Enable modules
+  modules = {
+    nvchad.enable = true;
+
+    terminal = {
+      enable = true;
+      theme = "tokyo-night-storm";
+      opacity = 0.8;
+    };
+
+    browsers = {
+      enable = true;
+      enableBrave = true;
+      enableQutebrowser = true;
+    };
+
+    desktop-apps = {
+      enable = true;
+      theme = "tokyo-night-storm";
+    };
+
+    wayland.enable = true;
+    stylix-config.enable = true;
+  };
+
+  # Home Manager configuration
+  home = {
+    username = "nix";
+    homeDirectory = "/home/nix";
+    stateVersion = "24.11";
+    packages = [];
+    file = {};
+    sessionVariables = {};
+  };
+
+  programs.home-manager.enable = true;
+}
