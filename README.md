@@ -49,7 +49,8 @@ This is a fully declarative NixOS configuration featuring a modern Hyprland desk
 
 ## Screenshots
 
-![Desktop Environment](bluesunset.jpg)
+![Desktop Environment](screenshot1.png)
+![Desktop Environment](screenshot2.png)
 
 ## Installation
 
