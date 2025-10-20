@@ -90,7 +90,13 @@ This is a fully declarative NixOS configuration featuring a modern Hyprland desk
    - **locale**: Set your locale (e.g., `"en_US.UTF-8"`)
 
    **Hardware modules to review (in the `imports` section):**
-   - **Remove** `../../modules/hardware/nvidiahybrid.nix` if you don't have NVIDIA hybrid graphics
+
+   **Graphics:**
+   - **Use** `../../modules/hardware/integrated-graphics.nix` for Intel/AMD integrated graphics
+   - **OR use** `../../modules/hardware/nvidiahybrid.nix` for NVIDIA hybrid graphics
+   - **Choose only ONE** graphics module based on your hardware
+
+   **Other modules:**
    - **Remove** `../../modules/laptoppower.nix` if you're on a desktop PC
    - **Remove** `../../modules/gaming/gaming.nix` if you don't want gaming support
    - Keep `../../modules/hardware/audio.nix` and `../../modules/hardware/bluetooth.nix` (most systems need these)
@@ -243,9 +249,11 @@ Before installing, make sure you've edited the template and:
 - [ ] Edited the template: Set hostname in `hosts/YOUR_HOSTNAME/configuration.nix`
 - [ ] Edited the template: Set username in `hosts/YOUR_HOSTNAME/configuration.nix`
 - [ ] Edited the template: Set timezone and locale
-- [ ] Edited the template: Removed incompatible hardware modules (NVIDIA, laptop power, etc.)
+- [ ] Edited the template: Choose correct graphics module (integrated-graphics OR nvidiahybrid)
+- [ ] Edited the template: Removed incompatible hardware modules (laptop power, gaming, etc.)
 - [ ] Generated `hardware-configuration.nix` for your system
-- [ ] Updated PCI bus IDs if using NVIDIA
+- [ ] Updated PCI bus IDs if using NVIDIA hybrid graphics
+- [ ] Uncommented AMD settings if using AMD integrated graphics
 - [ ] Added your host to `flake.nix`
 - [ ] Reviewed and customized `home.nix`
 
@@ -337,6 +345,22 @@ sudo nixos-rebuild switch
 <details>
 <summary><b>Hardware Modules</b> (<code>modules/hardware/</code>)</summary>
 
+#### integrated-graphics.nix
+**For systems with integrated graphics only (Intel/AMD)**
+- Optimized for Wayland compositors
+- Hardware video acceleration (VA-API, VDPAU)
+- 32-bit support for gaming
+- Intel: GuC/HuC firmware enabled for better performance
+- AMD: Mesa drivers with radeonsi support
+
+> **Usage:** Import this module for laptops/systems without dedicated GPU. Works with Intel or AMD integrated graphics.
+>
+> **For AMD users:** Edit the module and uncomment AMD-specific lines:
+> ```nix
+> LIBVA_DRIVER_NAME = "radeonsi";
+> boot.initrd.kernelModules = [ "amdgpu" ];
+> ```
+
 #### nvidiahybrid.nix
 **For laptops with NVIDIA + Intel hybrid graphics**
 - NVIDIA proprietary drivers (stable)
@@ -348,6 +372,8 @@ sudo nixos-rebuild switch
 > ```bash
 > lspci | grep -E "VGA|3D"
 > ```
+>
+> **Note:** Use `integrated-graphics.nix` instead if you don't have NVIDIA hardware.
 
 #### audio.nix
 - PipeWire with WirePlumber
@@ -578,10 +604,18 @@ modules.nvchad.enable = false;
 
 When adapting this configuration to your hardware:
 
-1. **NVIDIA Graphics:** If you don't have NVIDIA hardware, remove `./modules/hardware/nvidiahybrid.nix` from your host's imports
+1. **Graphics Configuration:**
+   - **Intel/AMD integrated only:** Use `./modules/hardware/integrated-graphics.nix`
+   - **NVIDIA hybrid graphics:** Use `./modules/hardware/nvidiahybrid.nix` and update PCI bus IDs
+   - **Important:** Only import ONE graphics module, not both
+
 2. **Laptop Power:** Desktop users should remove `./modules/laptoppower.nix`
-3. **PCI Bus IDs:** Update any hardware-specific PCI addresses in hardware modules
-4. **Bluetooth/WiFi:** Adjust as needed for your hardware
+
+3. **PCI Bus IDs (NVIDIA only):** If using NVIDIA hybrid graphics, update PCI addresses in the module
+
+4. **AMD Graphics:** If using AMD integrated graphics, edit `integrated-graphics.nix` and uncomment AMD-specific settings
+
+5. **Bluetooth/WiFi:** Adjust as needed for your hardware
 
 ### Adding a New Host
 
