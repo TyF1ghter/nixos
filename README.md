@@ -69,36 +69,46 @@ This is a fully declarative NixOS configuration featuring a modern Hyprland desk
 
 3. **Create your host configuration from the template:**
    ```bash
-   # Copy the template directory
+   # Copy the template directory to create your host configuration
    cp -r hosts/template hosts/YOUR_HOSTNAME
    ```
 
-4. **Generate hardware configuration:**
+   > **Important:** All your customization will start from editing the template files. The template provides a starting point that you'll modify for your specific system.
+
+4. **Edit the template configuration for your system:**
+   ```bash
+   # Use your preferred editor (nano or vim)
+   nano hosts/YOUR_HOSTNAME/configuration.nix
+   # OR
+   vim hosts/YOUR_HOSTNAME/configuration.nix
+   ```
+
+   **Required changes in `configuration.nix`:**
+   - **hostname**: Change `"nixos"` to `"YOUR_HOSTNAME"`
+   - **username**: Change the username to your desired username
+   - **timezone**: Set your timezone (e.g., `"America/Chicago"`, `"Europe/London"`)
+   - **locale**: Set your locale (e.g., `"en_US.UTF-8"`)
+
+   **Hardware modules to review (in the `imports` section):**
+   - **Remove** `../../modules/hardware/nvidiahybrid.nix` if you don't have NVIDIA hybrid graphics
+   - **Remove** `../../modules/laptoppower.nix` if you're on a desktop PC
+   - **Remove** `../../modules/gaming/gaming.nix` if you don't want gaming support
+   - Keep `../../modules/hardware/audio.nix` and `../../modules/hardware/bluetooth.nix` (most systems need these)
+
+5. **Generate hardware configuration:**
    ```bash
    # This detects your hardware and creates the configuration
    nixos-generate-config --show-hardware-config > hosts/YOUR_HOSTNAME/hardware-configuration.nix
    ```
 
-5. **Edit your host configuration:**
+6. **Update hardware-specific settings (if needed):**
+
+   If you have NVIDIA hybrid graphics and kept the module, you need to update PCI bus IDs:
    ```bash
-   nano hosts/YOUR_HOSTNAME/configuration.nix
-   ```
-
-   Update the following in `configuration.nix`:
-   - **hostname**: Set to `YOUR_HOSTNAME`
-   - **username**: Set to your desired username
-   - **timezone**: Set your timezone (e.g., `"America/Chicago"`)
-   - **locale**: Set your locale (e.g., `"en_US.UTF-8"`)
-   - **hardware modules**: Comment out or remove modules you don't need:
-     - Remove `../../modules/hardware/nvidiahybrid.nix` if you don't have NVIDIA
-     - Remove `../../modules/laptoppower.nix` if you're on a desktop
-     - Remove `../../modules/gaming/gaming.nix` if you don't want gaming support
-
-6. **Update hardware-specific settings:**
-
-   If you kept the NVIDIA module, edit `modules/hardware/nvidiahybrid.nix`:
-   ```bash
+   # Use your preferred editor
    nano modules/hardware/nvidiahybrid.nix
+   # OR
+   vim modules/hardware/nvidiahybrid.nix
    ```
 
    Find your PCI bus IDs:
@@ -119,7 +129,10 @@ This is a fully declarative NixOS configuration featuring a modern Hyprland desk
 
 7. **Add your host to `flake.nix`:**
    ```bash
+   # Use your preferred editor
    nano flake.nix
+   # OR
+   vim flake.nix
    ```
 
    Add your host to the `nixosConfigurations` section:
@@ -134,22 +147,27 @@ This is a fully declarative NixOS configuration featuring a modern Hyprland desk
    };
    ```
 
-8. **Review your home-manager configuration:**
+8. **Customize home-manager configuration:**
    ```bash
+   # Use your preferred editor
    nano home.nix
+   # OR
+   vim home.nix
    ```
 
-   Enable or disable Home Manager modules as desired:
+   Enable or disable Home Manager modules based on your preferences:
    ```nix
    modules = {
-     nvchad.enable = true;          # Neovim with Claude Code
-     terminal.enable = true;         # Kitty terminal
-     browsers.enable = true;         # Web browsers
-     desktop-apps.enable = true;     # Desktop applications
-     wayland.enable = true;          # Wayland tools
-     stylix-config.enable = true;    # Theme integration
+     nvchad.enable = true;          # Neovim with Claude Code integration
+     terminal.enable = true;         # Kitty terminal emulator
+     browsers.enable = true;         # Brave and Qutebrowser
+     desktop-apps.enable = true;     # Desktop applications (Vesktop, etc.)
+     wayland.enable = true;          # Wayland compositor tools
+     stylix-config.enable = true;    # System-wide theme integration
    };
    ```
+
+   > **Tip:** You can disable any module by setting it to `false`. Start with all enabled and disable what you don't want.
 
 9. **Install NixOS:**
    ```bash
@@ -185,16 +203,24 @@ This is a fully declarative NixOS configuration featuring a modern Hyprland desk
    # sudo nixos-generate-config --show-hardware-config > hosts/$(hostname)/hardware-configuration.nix
    ```
 
-4. **Edit the configuration:**
+4. **Edit the template configuration for your system:**
    ```bash
+   # Use your preferred editor (nano or vim)
    sudo nano hosts/$(hostname)/configuration.nix
+   # OR
+   sudo vim hosts/$(hostname)/configuration.nix
    ```
 
-   Follow the same customization steps from Option 1 (steps 5-8)
+   Follow the same customization steps from Option 1 (steps 4-8)
+
+   > **Remember:** Start by editing the template to match your system's hostname, username, timezone, and hardware modules.
 
 5. **Add your host to `flake.nix`:**
    ```bash
+   # Use your preferred editor
    sudo nano flake.nix
+   # OR
+   sudo vim flake.nix
    ```
 
    Add your hostname to `nixosConfigurations` as shown in Option 1, step 7
@@ -212,14 +238,18 @@ This is a fully declarative NixOS configuration featuring a modern Hyprland desk
 
 ### Quick Checklist
 
-Before installing, make sure you've:
-- [ ] Set hostname in `hosts/YOUR_HOSTNAME/configuration.nix`
-- [ ] Set username in `hosts/YOUR_HOSTNAME/configuration.nix`
-- [ ] Generated or copied `hardware-configuration.nix`
-- [ ] Removed incompatible hardware modules (NVIDIA, laptop power, etc.)
+Before installing, make sure you've edited the template and:
+- [ ] Copied `hosts/template` to `hosts/YOUR_HOSTNAME`
+- [ ] Edited the template: Set hostname in `hosts/YOUR_HOSTNAME/configuration.nix`
+- [ ] Edited the template: Set username in `hosts/YOUR_HOSTNAME/configuration.nix`
+- [ ] Edited the template: Set timezone and locale
+- [ ] Edited the template: Removed incompatible hardware modules (NVIDIA, laptop power, etc.)
+- [ ] Generated `hardware-configuration.nix` for your system
 - [ ] Updated PCI bus IDs if using NVIDIA
 - [ ] Added your host to `flake.nix`
 - [ ] Reviewed and customized `home.nix`
+
+> **Key Point:** The template files in `hosts/template/` are your starting point. Copy them, then edit to match your specific system configuration.
 
 ## Structure
 
