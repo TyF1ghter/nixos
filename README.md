@@ -10,7 +10,8 @@ Modular NixOS configuration with support for multiple hosts. Currently configure
 - **Comprehensive modules** - Hardware, desktop, gaming, and more
 - **Well-documented** - Extensive documentation and examples
 
-## Directory Structure
+<details id="directory-structure">
+<summary><strong>Directory Structure</strong></summary>
 
 ```
 /home/nix/nixos/
@@ -29,7 +30,10 @@ Modular NixOS configuration with support for multiple hosts. Currently configure
     └── *.nix                 # Home Manager feature modules
 ```
 
-## Quick Start
+</details>
+
+<details id="quick-start">
+<summary><strong>Quick Start</strong></summary>
 
 ### First Time Setup
 
@@ -71,6 +75,8 @@ homeconf     # Edit home-manager config
 flakeconf    # Edit flake.nix
 flakedoot    # Update flake inputs
 ```
+
+</details>
 
 ## System Modules
 
@@ -429,7 +435,8 @@ modules.stylix-config.enable = true;
 
 </details>
 
-## Shell Aliases
+<details id="shell-aliases">
+<summary><strong>Shell Aliases</strong></summary>
 
 Configured in `configuration.nix`:
 
@@ -446,7 +453,10 @@ Configured in `configuration.nix`:
 | `mixer` | `pulsemixer` | Audio mixer |
 | `vi` | `nvim` | NeoVim |
 
-## Package Management
+</details>
+
+<details id="package-management">
+<summary><strong>Package Management</strong></summary>
 
 ### System Packages
 Installed via `environment.systemPackages` in `configuration.nix`.
@@ -462,7 +472,10 @@ Installed via `environment.systemPackages` in `configuration.nix`.
 ### User Packages
 Managed through Home Manager modules or `home.packages` in `home.nix`.
 
-## Maintenance
+</details>
+
+<details id="maintenance">
+<summary><strong>Maintenance</strong></summary>
 
 ### Garbage Collection
 Automatic weekly cleanup configured in `configuration.nix`:
@@ -489,7 +502,10 @@ sudo nix flake update /etc/nixos
 updoot
 ```
 
-## Customization
+</details>
+
+<details id="customization">
+<summary><strong>Customization</strong></summary>
 
 ### Adding a New Module
 
@@ -568,7 +584,10 @@ modules = {
 };
 ```
 
-## Troubleshooting
+</details>
+
+<details id="troubleshooting">
+<summary><strong>Troubleshooting</strong></summary>
 
 ### Build Failures
 ```bash
@@ -615,7 +634,10 @@ systemctl --user restart pipewire pipewire-pulse wireplumber
 pactl info
 ```
 
-## System Specifications
+</details>
+
+<details id="system-specs">
+<summary><strong>System Specifications</strong></summary>
 
 - **Model:** Dell XPS 15 9520
 - **CPU:** Intel (with integrated graphics)
@@ -624,27 +646,41 @@ pactl info
 - **Shell:** Bash with Starship prompt
 - **Theme:** Tokyo Night Storm
 
-## Additional Resources
+</details>
+
+<details id="resources">
+<summary><strong>Additional Resources</strong></summary>
 
 - [NixOS Manual](https://nixos.org/manual/nixos/stable/)
 - [Home Manager Manual](https://nix-community.github.io/home-manager/)
 - [Hyprland Wiki](https://wiki.hyprland.org/)
 - [Stylix Documentation](https://github.com/danth/stylix)
 
-## Adding a New Host
+</details>
+
+<details id="new-host">
+<summary><strong>Adding a New Host</strong></summary>
 
 See the detailed guide in [hosts/template/README.md](hosts/template/README.md) for step-by-step instructions on adding a new host to this configuration.
 
-## Contributing
+</details>
+
+<details id="contributing">
+<summary><strong>Contributing</strong></summary>
 
 Feel free to fork this repository and adapt it to your needs! If you make improvements to the shared modules, consider contributing back via pull requests.
 
-## State Versions
+</details>
+
+<details id="state-versions">
+<summary><strong>State Versions</strong></summary>
 
 - **System:** 25.11 (`configuration.nix`)
 - **Home Manager:** 24.11 (`home.nix`)
 
 **Note:** Do not change these versions unless you understand the implications. See NixOS documentation for details.
+
+</details>
 
 ## License
 
