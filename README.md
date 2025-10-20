@@ -1,4 +1,4 @@
-# NixOS Configuration for Dell XPS 15 9520
+# NixOS Configuration
 
 > Modular NixOS configuration with flakes, Home Manager, Hyprland, and NVIDIA hybrid graphics support.
 
@@ -24,14 +24,14 @@
 
 ## Overview
 
-This is a fully declarative NixOS configuration designed for the **Dell XPS 15 9520** with NVIDIA hybrid graphics. It features a modern Hyprland desktop environment, comprehensive gaming support, and a modular architecture that makes it easy to adapt to other systems.
+This is a fully declarative NixOS configuration featuring a modern Hyprland desktop environment, comprehensive gaming support, and a modular architecture that makes it easy to adapt to different systems.
 
 **Key Technologies:**
 - **Nix Flakes** - Reproducible builds and dependency management
 - **Home Manager** - Declarative dotfiles and user configuration
 - **Hyprland** - Tiling Wayland compositor
 - **Stylix** - System-wide theming (Tokyo Night Storm)
-- **NVIDIA PRIME** - Hybrid graphics with gaming specialization
+- **NVIDIA PRIME** - Hybrid graphics with gaming specialization (optional)
 
 ## Features
 
@@ -40,7 +40,7 @@ This is a fully declarative NixOS configuration designed for the **Dell XPS 15 9
 - 🎨 **Unified theming** via Stylix (Tokyo Night Storm)
 - 🖥️ **Hyprland desktop** with Waybar, Wofi, and complete Wayland tooling
 - 🎮 **Gaming ready** - Steam, MangoHud, Gamemode, Lutris
-- 🔋 **NVIDIA hybrid graphics** - Battery-efficient offload + gaming mode
+- 🔋 **NVIDIA hybrid graphics** - Battery-efficient offload + gaming mode (optional)
 - 📦 **Modular design** - Enable/disable features per host
 - 🔐 **Security hardening** - Firewall, polkit, optional fingerprint auth
 - 🌐 **VPN support** - Tailscale, OpenVPN, WireGuard, and more
@@ -60,7 +60,7 @@ This is a fully declarative NixOS configuration designed for the **Dell XPS 15 9
 2. **Clone this repository:**
    ```bash
    nix-shell -p git
-   git clone https://github.com/TyF1ghter/nixos.git /mnt/etc/nixos
+   git clone https://github.com/YOUR-USERNAME/YOUR-REPO.git /mnt/etc/nixos
    cd /mnt/etc/nixos
    ```
 
@@ -74,7 +74,7 @@ This is a fully declarative NixOS configuration designed for the **Dell XPS 15 9
 
    # Edit configuration
    sudo nano hosts/YOUR_HOSTNAME/configuration.nix
-   # Update: hostname, username, timezone, etc.
+   # Update: hostname, username, timezone, hardware modules, etc.
    ```
 
 4. **Add your host to `flake.nix`:**
@@ -100,7 +100,7 @@ This is a fully declarative NixOS configuration designed for the **Dell XPS 15 9
 1. **Clone to `/etc/nixos`:**
    ```bash
    sudo mv /etc/nixos /etc/nixos.bak
-   sudo git clone https://github.com/TyF1ghter/nixos.git /etc/nixos
+   sudo git clone https://github.com/YOUR-USERNAME/YOUR-REPO.git /etc/nixos
    ```
 
 2. **Follow steps 3-4** from Fresh Install
@@ -110,6 +110,8 @@ This is a fully declarative NixOS configuration designed for the **Dell XPS 15 9
    sudo nixos-rebuild switch --flake /etc/nixos#YOUR_HOSTNAME
    ```
 
+> **Note:** Make sure to review and customize the hardware modules (especially `modules/hardware/nvidiahybrid.nix`) based on your system's hardware.
+
 ## Structure
 
 ```
@@ -117,7 +119,7 @@ This is a fully declarative NixOS configuration designed for the **Dell XPS 15 9
 ├── flake.nix                 # Flake configuration and inputs
 ├── flake.lock                # Locked dependency versions
 ├── hosts/                    # Host-specific configurations
-│   ├── xps9520/             # Dell XPS 15 9520 config
+│   ├── xps9520/             # Example host configuration
 │   │   ├── configuration.nix
 │   │   └── hardware-configuration.nix
 │   └── template/            # Template for new hosts
@@ -176,6 +178,8 @@ sudo nix-collect-garbage -d
 
 ### NVIDIA Graphics
 
+> **Note:** Only applicable if you have NVIDIA hybrid graphics and have enabled the `modules/hardware/nvidiahybrid.nix` module.
+
 ```bash
 # Normal mode (battery efficient, offload)
 nvidia-offload <application>
@@ -194,11 +198,17 @@ sudo nixos-rebuild switch
 <details>
 <summary><b>Hardware Modules</b> (<code>modules/hardware/</code>)</summary>
 
-#### nvidia.nix
+#### nvidiahybrid.nix
+**For laptops with NVIDIA + Intel hybrid graphics**
 - NVIDIA proprietary drivers (stable)
 - PRIME offload mode (battery saving)
 - Gaming specialization with PRIME sync
 - Intel integrated GPU as primary
+
+> **Configuration required:** Update PCI bus IDs in the module to match your hardware. Find them with:
+> ```bash
+> lspci | grep -E "VGA|3D"
+> ```
 
 #### audio.nix
 - PipeWire with WirePlumber
@@ -275,12 +285,15 @@ sudo nixos-rebuild switch
 - Fira Code Nerd Font
 
 #### laptoppower.nix
+**For laptops only**
 - Power management
 - auto-cpufreq CPU frequency scaling
 
+> **Note:** Desktop users should disable this module.
+
 #### security.nix
 - Security hardening
-- Optional fingerprint authentication
+- Optional fingerprint authentication (commented out by default)
 
 #### stylix.nix
 - Tokyo Night Storm theme
@@ -422,6 +435,15 @@ Stylix theme targets for user applications
 modules.nvchad.enable = false;
 ```
 
+### Hardware-Specific Configurations
+
+When adapting this configuration to your hardware:
+
+1. **NVIDIA Graphics:** If you don't have NVIDIA hardware, remove `./modules/hardware/nvidiahybrid.nix` from your host's imports
+2. **Laptop Power:** Desktop users should remove `./modules/laptoppower.nix`
+3. **PCI Bus IDs:** Update any hardware-specific PCI addresses in hardware modules
+4. **Bluetooth/WiFi:** Adjust as needed for your hardware
+
 ### Adding a New Host
 
 See [hosts/template/README.md](hosts/template/README.md) for detailed instructions.
@@ -492,6 +514,15 @@ pulsemixer
 
 </details>
 
+## Example Configurations
+
+This repository includes an example configuration for a **Dell XPS 15 9520** in `hosts/xps9520/`. Use it as a reference when creating your own host configuration.
+
+**Hardware specifics in the example:**
+- Intel integrated graphics + NVIDIA dedicated GPU
+- Laptop power management enabled
+- All desktop and gaming modules enabled
+
 ## Resources
 
 - [NixOS Manual](https://nixos.org/manual/nixos/stable/)
@@ -500,23 +531,10 @@ pulsemixer
 - [Stylix Documentation](https://github.com/danth/stylix)
 - [Nix Flakes Guide](https://nixos.wiki/wiki/Flakes)
 
-## System Specifications
-
-- **Model:** Dell XPS 15 9520
-- **CPU:** Intel (with integrated graphics)
-- **GPU:** NVIDIA (hybrid graphics)
-- **Display Manager:** GDM (Wayland)
-- **Desktop:** Hyprland
-- **Shell:** Bash with Starship prompt
-- **Theme:** Tokyo Night Storm
-- **System Version:** 25.11
-- **Home Manager Version:** 24.11
-
 ## License
 
 This configuration is provided as-is for educational and personal use. See [LICENSE](LICENSE) for details.
 
 ---
 
-**Maintained by:** TyF1ghter
 **Repository:** [github.com/TyF1ghter/nixos](https://github.com/TyF1ghter/nixos)
