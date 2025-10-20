@@ -53,31 +53,76 @@ This is a fully declarative NixOS configuration featuring a modern Hyprland desk
 
 ## Installation
 
-### Fresh Install
+### Option 1: Fresh NixOS Install
 
-1. **Boot NixOS installer** and partition your drive
+1. **Boot NixOS installer** and partition your drive according to the [NixOS installation guide](https://nixos.org/manual/nixos/stable/#sec-installation)
 
 2. **Clone this repository:**
    ```bash
+   # Enter a shell with git available
    nix-shell -p git
-   git clone https://github.com/YOUR-USERNAME/YOUR-REPO.git /mnt/etc/nixos
+
+   # Clone to the installation target
+   git clone https://github.com/TyF1ghter/nixos.git /mnt/etc/nixos
    cd /mnt/etc/nixos
    ```
 
-3. **Create your host configuration:**
+3. **Create your host configuration from the template:**
    ```bash
-   # Copy the template
-   sudo cp -r hosts/template hosts/YOUR_HOSTNAME
-
-   # Generate hardware config
-   sudo nixos-generate-config --show-hardware-config > hosts/YOUR_HOSTNAME/hardware-configuration.nix
-
-   # Edit configuration
-   sudo nano hosts/YOUR_HOSTNAME/configuration.nix
-   # Update: hostname, username, timezone, hardware modules, etc.
+   # Copy the template directory
+   cp -r hosts/template hosts/YOUR_HOSTNAME
    ```
 
-4. **Add your host to `flake.nix`:**
+4. **Generate hardware configuration:**
+   ```bash
+   # This detects your hardware and creates the configuration
+   nixos-generate-config --show-hardware-config > hosts/YOUR_HOSTNAME/hardware-configuration.nix
+   ```
+
+5. **Edit your host configuration:**
+   ```bash
+   nano hosts/YOUR_HOSTNAME/configuration.nix
+   ```
+
+   Update the following in `configuration.nix`:
+   - **hostname**: Set to `YOUR_HOSTNAME`
+   - **username**: Set to your desired username
+   - **timezone**: Set your timezone (e.g., `"America/Chicago"`)
+   - **locale**: Set your locale (e.g., `"en_US.UTF-8"`)
+   - **hardware modules**: Comment out or remove modules you don't need:
+     - Remove `../../modules/hardware/nvidiahybrid.nix` if you don't have NVIDIA
+     - Remove `../../modules/laptoppower.nix` if you're on a desktop
+     - Remove `../../modules/gaming/gaming.nix` if you don't want gaming support
+
+6. **Update hardware-specific settings:**
+
+   If you kept the NVIDIA module, edit `modules/hardware/nvidiahybrid.nix`:
+   ```bash
+   nano modules/hardware/nvidiahybrid.nix
+   ```
+
+   Find your PCI bus IDs:
+   ```bash
+   lspci | grep -E "VGA|3D"
+   # Example output:
+   # 00:02.0 VGA compatible controller: Intel Corporation ...
+   # 01:00.0 3D controller: NVIDIA Corporation ...
+   ```
+
+   Update the PCI bus IDs in the file:
+   ```nix
+   hardware.nvidia.prime = {
+     intelBusId = "PCI:0:2:0";   # Your Intel GPU bus ID
+     nvidiaBusId = "PCI:1:0:0";  # Your NVIDIA GPU bus ID
+   };
+   ```
+
+7. **Add your host to `flake.nix`:**
+   ```bash
+   nano flake.nix
+   ```
+
+   Add your host to the `nixosConfigurations` section:
    ```nix
    nixosConfigurations = {
      YOUR_HOSTNAME = nixpkgs.lib.nixosSystem {
@@ -89,28 +134,92 @@ This is a fully declarative NixOS configuration featuring a modern Hyprland desk
    };
    ```
 
-5. **Install:**
+8. **Review your home-manager configuration:**
    ```bash
-   sudo nixos-install --flake .#YOUR_HOSTNAME
-   sudo reboot
+   nano home.nix
    ```
 
-### Adding to Existing System
+   Enable or disable Home Manager modules as desired:
+   ```nix
+   modules = {
+     nvchad.enable = true;          # Neovim with Claude Code
+     terminal.enable = true;         # Kitty terminal
+     browsers.enable = true;         # Web browsers
+     desktop-apps.enable = true;     # Desktop applications
+     wayland.enable = true;          # Wayland tools
+     stylix-config.enable = true;    # Theme integration
+   };
+   ```
 
-1. **Clone to `/etc/nixos`:**
+9. **Install NixOS:**
+   ```bash
+   nixos-install --flake .#YOUR_HOSTNAME
+   ```
+
+10. **Reboot:**
+    ```bash
+    reboot
+    ```
+
+### Option 2: Add to Existing NixOS System
+
+1. **Backup your current configuration:**
    ```bash
    sudo mv /etc/nixos /etc/nixos.bak
-   sudo git clone https://github.com/YOUR-USERNAME/YOUR-REPO.git /etc/nixos
    ```
 
-2. **Follow steps 3-4** from Fresh Install
-
-3. **Rebuild:**
+2. **Clone this repository:**
    ```bash
-   sudo nixos-rebuild switch --flake /etc/nixos#YOUR_HOSTNAME
+   sudo git clone https://github.com/TyF1ghter/nixos.git /etc/nixos
+   cd /etc/nixos
    ```
 
-> **Note:** Make sure to review and customize the hardware modules (especially `modules/hardware/nvidiahybrid.nix`) based on your system's hardware.
+3. **Create your host configuration:**
+   ```bash
+   # Copy the template
+   sudo cp -r hosts/template hosts/$(hostname)
+
+   # Copy your existing hardware config or generate a new one
+   sudo cp /etc/nixos.bak/hardware-configuration.nix hosts/$(hostname)/hardware-configuration.nix
+   # OR generate fresh:
+   # sudo nixos-generate-config --show-hardware-config > hosts/$(hostname)/hardware-configuration.nix
+   ```
+
+4. **Edit the configuration:**
+   ```bash
+   sudo nano hosts/$(hostname)/configuration.nix
+   ```
+
+   Follow the same customization steps from Option 1 (steps 5-8)
+
+5. **Add your host to `flake.nix`:**
+   ```bash
+   sudo nano flake.nix
+   ```
+
+   Add your hostname to `nixosConfigurations` as shown in Option 1, step 7
+
+6. **Test the configuration:**
+   ```bash
+   # Check for syntax errors
+   sudo nix flake check /etc/nixos
+   ```
+
+7. **Rebuild your system:**
+   ```bash
+   sudo nixos-rebuild switch --flake /etc/nixos#$(hostname)
+   ```
+
+### Quick Checklist
+
+Before installing, make sure you've:
+- [ ] Set hostname in `hosts/YOUR_HOSTNAME/configuration.nix`
+- [ ] Set username in `hosts/YOUR_HOSTNAME/configuration.nix`
+- [ ] Generated or copied `hardware-configuration.nix`
+- [ ] Removed incompatible hardware modules (NVIDIA, laptop power, etc.)
+- [ ] Updated PCI bus IDs if using NVIDIA
+- [ ] Added your host to `flake.nix`
+- [ ] Reviewed and customized `home.nix`
 
 ## Structure
 
