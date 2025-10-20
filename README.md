@@ -76,8 +76,8 @@ flakedoot    # Update flake inputs
 
 ### Hardware Modules (`modules/hardware/`)
 
-#### nvidia.nix
-NVIDIA GPU configuration with hybrid graphics support.
+<details id="nvidia">
+<summary><strong>nvidia.nix</strong> - NVIDIA GPU configuration with hybrid graphics support</summary>
 
 **Features:**
 - NVIDIA proprietary drivers (stable)
@@ -100,8 +100,10 @@ sudo nixos-rebuild switch --specialisation gaming-time
 - Force full composition pipeline enabled
 - Power management enabled
 
-#### audio.nix
-PipeWire audio system configuration.
+</details>
+
+<details id="audio">
+<summary><strong>audio.nix</strong> - PipeWire audio system configuration</summary>
 
 **Features:**
 - PipeWire with WirePlumber
@@ -109,17 +111,21 @@ PipeWire audio system configuration.
 - PulseAudio compatibility layer
 - Real-time kit (rtkit) enabled
 
-#### bluetooth.nix
-Bluetooth hardware support.
+</details>
+
+<details id="bluetooth">
+<summary><strong>bluetooth.nix</strong> - Bluetooth hardware support</summary>
 
 **Features:**
 - Bluetooth hardware enabled
 - Blueman GUI manager
 
+</details>
+
 ### Services Modules (`modules/services/`)
 
-#### networking.nix
-Network configuration and VPN support.
+<details id="networking">
+<summary><strong>networking.nix</strong> - Network configuration and VPN support</summary>
 
 **Features:**
 - NetworkManager with multiple VPN plugins:
@@ -134,8 +140,10 @@ Network configuration and VPN support.
 - WireGuard Netmanager
 - Firewall enabled
 
-#### display-manager.nix
-Display server and input configuration.
+</details>
+
+<details id="display-manager">
+<summary><strong>display-manager.nix</strong> - Display server and input configuration</summary>
 
 **Features:**
 - GDM (GNOME Display Manager) with Wayland
@@ -146,8 +154,10 @@ Display server and input configuration.
   - Typing detection disabled
 - GNOME services (keyring, sushi, gvfs, tumbler)
 
-#### system-services.nix
-Miscellaneous system services.
+</details>
+
+<details id="system-services">
+<summary><strong>system-services.nix</strong> - Miscellaneous system services</summary>
 
 **Features:**
 - Hypridle (idle daemon)
@@ -155,10 +165,12 @@ Miscellaneous system services.
 - ACPI light controls
 - Xbox One controller support
 
+</details>
+
 ### Desktop Modules (`modules/desktop/`)
 
-#### hyprland.nix
-Hyprland Wayland compositor configuration.
+<details id="hyprland">
+<summary><strong>hyprland.nix</strong> - Hyprland Wayland compositor configuration</summary>
 
 **Features:**
 - Hyprland with XWayland support
@@ -177,16 +189,20 @@ Hyprland Wayland compositor configuration.
   - dunst (notifications)
   - wlogout (logout menu)
 
-#### xdg.nix
-XDG portal configuration for desktop integration.
+</details>
+
+<details id="xdg">
+<summary><strong>xdg.nix</strong> - XDG portal configuration for desktop integration</summary>
 
 **Features:**
 - XDG Desktop Portal (Hyprland)
 - GTK portal fallback
 - Proper file picker and screen sharing support
 
-#### thunar.nix
-File manager and file utilities.
+</details>
+
+<details id="thunar">
+<summary><strong>thunar.nix</strong> - File manager and file utilities</summary>
 
 **Features:**
 - Thunar file manager with plugins:
@@ -195,10 +211,12 @@ File manager and file utilities.
 - File-roller (archive manager)
 - File management utilities (dysk, fzf, gvfs, udiskie)
 
+</details>
+
 ### Gaming Module (`modules/gaming/`)
 
-#### gaming.nix
-Complete gaming setup with Steam and related tools.
+<details id="gaming">
+<summary><strong>gaming.nix</strong> - Complete gaming setup with Steam and related tools</summary>
 
 **Features:**
 - Steam with:
@@ -217,32 +235,40 @@ Complete gaming setup with Steam and related tools.
 **Environment Variables:**
 - `STEAM_EXTRA_COMPAT_TOOLS_PATHS` - Custom Proton tools location
 
+</details>
+
 ### System Feature Modules
 
-#### fonts.nix
-Font configuration.
+<details id="fonts">
+<summary><strong>fonts.nix</strong> - Font configuration</summary>
 
 **Installed Fonts:**
 - Font Awesome
 - Fira Code Nerd Font
 
-#### power.nix
-Laptop power management.
+</details>
+
+<details id="power">
+<summary><strong>power.nix</strong> - Laptop power management</summary>
 
 **Features:**
 - System power management enabled
 - auto-cpufreq (CPU frequency scaling)
 
-#### security.nix
-Security and authentication.
+</details>
+
+<details id="security">
+<summary><strong>security.nix</strong> - Security and authentication</summary>
 
 **Note:** Fingerprint authentication is commented out but available.
 
 **To Enable Fingerprint:**
 Uncomment lines in `modules/security.nix` and ensure you have the correct driver.
 
-#### stylix.nix
-System-wide theming with Stylix.
+</details>
+
+<details id="stylix">
+<summary><strong>stylix.nix</strong> - System-wide theming with Stylix</summary>
 
 **Features:**
 - Tokyo Night Storm theme
@@ -251,20 +277,24 @@ System-wide theming with Stylix.
 
 **Theme:** `tokyo-night-storm.yaml` from base16-schemes
 
-#### virtualization.nix
-Virtual machine support.
+</details>
+
+<details id="virtualization">
+<summary><strong>virtualization.nix</strong> - Virtual machine support</summary>
 
 **Features:**
 - libvirtd (KVM/QEMU)
 - virt-manager GUI
 - quickemu (quick VM setup)
 
+</details>
+
 ## Home Manager Modules
 
 Home Manager modules use an option-based system for flexibility.
 
-### nvchad.nix
-NeoVim with NvChad and Claude Code integration.
+<details id="nvchad">
+<summary><strong>nvchad.nix</strong> - NeoVim with NvChad and Claude Code integration</summary>
 
 **Enable:**
 ```nix
@@ -287,8 +317,10 @@ modules.nvchad.enable = true;
 - `<leader>cC` - Continue conversation
 - `<leader>cV` - Verbose mode
 
-### terminal.nix
-Terminal emulator configuration (Kitty).
+</details>
+
+<details id="terminal">
+<summary><strong>terminal.nix</strong> - Terminal emulator configuration (Kitty)</summary>
 
 **Enable:**
 ```nix
@@ -304,8 +336,10 @@ modules.terminal = {
 };
 ```
 
-### browsers.nix
-Web browser configuration.
+</details>
+
+<details id="browsers">
+<summary><strong>browsers.nix</strong> - Web browser configuration</summary>
 
 **Enable:**
 ```nix
@@ -336,8 +370,10 @@ modules.browsers = {
 - `reddit <query>` - Reddit
 - And many more...
 
-### desktop-apps.nix
-Desktop applications.
+</details>
+
+<details id="desktop-apps">
+<summary><strong>desktop-apps.nix</strong> - Desktop applications</summary>
 
 **Enable:**
 ```nix
@@ -355,8 +391,10 @@ modules.desktop-apps = {
 **Includes:**
 - Vesktop (Discord client)
 
-### wayland.nix
-Wayland compositor tools.
+</details>
+
+<details id="wayland">
+<summary><strong>wayland.nix</strong> - Wayland compositor tools</summary>
 
 **Enable:**
 ```nix
@@ -367,8 +405,10 @@ modules.wayland.enable = true;
 - Waybar (status bar)
 - Wofi (application launcher)
 
-### stylix.nix (homemanager)
-Stylix theme targets for user applications.
+</details>
+
+<details id="stylix-hm">
+<summary><strong>stylix.nix</strong> - Stylix theme targets for user applications</summary>
 
 **Enable:**
 ```nix
@@ -386,6 +426,8 @@ modules.stylix-config.enable = true;
 - Wofi
 - Qutebrowser
 - GTK applications
+
+</details>
 
 ## Shell Aliases
 
