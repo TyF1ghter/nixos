@@ -38,7 +38,7 @@ in
             config = function()
               require("claude-code").setup({
                 window = {
-                  position = "botright",
+                  position = "vertical",
                   split_ratio = 0.3,
                   enter_insert = true,
                 },
