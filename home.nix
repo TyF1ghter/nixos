@@ -10,6 +10,7 @@
     ./homemanager/terminal.nix
     ./homemanager/browsers.nix
     ./homemanager/vdesktop.nix
+    ./homemanager/element.nix
     ./homemanager/stylix.nix
 
     # Wayland/Hyprland modules
@@ -18,6 +19,8 @@
     ./homemanager/waybar.nix
     ./homemanager/wofi.nix
     ./homemanager/dunst.nix
+    ./homemanager/hyprlock.nix
+    ./homemanager/hyprpaper.nix
     ./homemanager/btop.nix
   ];
 
@@ -27,8 +30,36 @@
     terminal.enable = true;
     browsers.enable = true;
     vdesktop.enable = true;
+    element.enable = true;
     wayland.enable = true;
     stylix-config.enable = true;
+    waybar.enable = true;
+    dunst.enable = true;
+    wofi.enable = true;
+    hyprland.enable = true;
+
+    hyprlock = {
+      enable = true;
+      background.path = "~/Pictures/lawsons.jpg";
+    };
+
+    hyprpaper = {
+      enable = true;
+      wallpapers = [
+        "/home/ty/Pictures/worldblue.png"
+        "/home/nix/Pictures/wolrdblue.png"
+      ];
+      monitors = [
+        {
+          monitor = "eDP-1";
+          path = "/home/ty/Pictures/worldblue.png";
+        }
+        {
+          monitor = "";
+          path = "/home/ty/Pictures/worldblue.png";
+        }
+      ];
+    };
   };
 
   # Home Manager configuration
