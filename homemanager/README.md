@@ -9,7 +9,7 @@ homemanager/
 ├── nvchad.nix          # NeoVim with NvChad + Claude Code
 ├── terminal.nix        # Kitty terminal emulator
 ├── browsers.nix        # Brave + Qutebrowser
-├── desktop-apps.nix    # Vesktop (Discord)
+├── vdesktop.nix        # Vesktop (Discord client)
 ├── wayland.nix         # Waybar + Wofi
 └── stylix.nix          # Stylix theme targets
 ```
@@ -41,7 +41,7 @@ modules = {
   nvchad.enable = true;
   terminal.enable = true;
   browsers.enable = true;
-  desktop-apps.enable = true;
+  vdesktop.enable = true;
   wayland.enable = true;
   stylix-config.enable = true;
 };
@@ -177,28 +177,48 @@ modules.browsers = {
 - Strict content blocking
 - Hosts-based blocking
 
-### desktop-apps.nix
+### vdesktop.nix
 
-**Module Name:** `modules.desktop-apps`
+**Module Name:** `modules.vdesktop`
 
-**Purpose:** Desktop applications configuration.
+**Purpose:** Vesktop (Discord client) with custom theming and configuration.
 
 **Options:**
 ```nix
-modules.desktop-apps = {
+modules.vdesktop = {
   enable = true;
-  theme = "tokyo-night-storm";  # App color theme
+  theme = "tokyo-night-storm";  # Color theme
+  opacity = 0.80;                # Window opacity (0.0-1.0)
+
+  settings = {
+    enableMenu = true;           # Enable menu bar
+    minimizeToTray = true;       # Minimize to system tray
+    discordBranch = "stable";    # Discord branch (stable/canary/ptb)
+  };
+
+  vencord = {
+    useQuickCss = true;          # Enable custom CSS
+    enableReactDevtools = false; # React DevTools
+    frameless = false;           # Frameless window
+    noTrack = true;              # Disable Discord tracking
+  };
 };
 ```
 
-**Includes:**
-- **Vesktop:** Enhanced Discord client with better Linux support
-
-**Vesktop Features:**
-- Native Wayland support
+**Features:**
+- Enhanced Discord client with better Linux support
+- Native Wayland support with transparency
 - Better screen sharing
-- Custom themes
-- Privacy enhancements
+- Custom Tokyo Night Storm theme matching NvChad and Kitty
+- Vencord integration for customization and privacy
+- Configurable window opacity via Hyprland
+- NoTrack plugin to disable Discord telemetry
+
+**Theme Integration:**
+- Automatically matches Tokyo Night Storm colors from NvChad and terminal
+- Transparent backgrounds with configurable opacity
+- Custom scrollbar styling
+- Enhanced text readability with proper contrast
 
 ### wayland.nix
 
@@ -244,13 +264,14 @@ modules.stylix-config = {
 **Themed Applications:**
 - Kitty terminal (with 256-color variant)
 - XFCE/Thunar file manager
-- Vesktop (Discord)
 - Hyprland compositor
 - Hyprlock screen locker
 - Waybar status bar
 - Wofi launcher
 - Qutebrowser
 - GTK applications (system-wide)
+
+**Note:** Vesktop uses a custom Tokyo Night Storm theme (configured in vdesktop.nix) instead of Stylix for better Discord-specific styling.
 
 **How It Works:**
 Stylix reads the base16 theme defined in system config and automatically generates color schemes for all enabled targets.

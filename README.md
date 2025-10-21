@@ -168,7 +168,7 @@ This is a fully declarative NixOS configuration featuring a modern Hyprland desk
      nvchad.enable = true;          # Neovim with Claude Code integration
      terminal.enable = true;         # Kitty terminal emulator
      browsers.enable = true;         # Brave and Qutebrowser
-     desktop-apps.enable = true;     # Desktop applications (Vesktop, etc.)
+     vdesktop.enable = true;         # Vesktop Discord client
      wayland.enable = true;          # Wayland compositor tools
      stylix-config.enable = true;    # System-wide theme integration
    };
@@ -284,12 +284,12 @@ Before installing, make sure you've edited the template and:
 ├── homemanager/             # Home Manager modules
 │   ├── browsers.nix         # Brave, Qutebrowser
 │   ├── btop.nix
-│   ├── desktop-apps.nix     # Vesktop, etc.
 │   ├── dunst.nix
 │   ├── hyprland.nix
 │   ├── nvchad.nix           # Neovim with Claude Code
 │   ├── stylix.nix
 │   ├── terminal.nix         # Kitty
+│   ├── vdesktop.nix         # Vesktop Discord client
 │   ├── waybar.nix
 │   ├── wayland.nix
 │   └── wofi.nix
@@ -519,12 +519,34 @@ modules.browsers = {
 
 **Qutebrowser search shortcuts:** `map`, `yt`, `git`, `wiki`, `reddit`, etc.
 
-#### desktop-apps.nix
-Desktop applications (Vesktop Discord client)
+#### vdesktop.nix
+Vesktop Discord client with custom theming
 
+**Options:**
 ```nix
-modules.desktop-apps.enable = true;
+modules.vdesktop = {
+  enable = true;
+  theme = "tokyo-night-storm";
+  opacity = 0.80;  # Window opacity
+
+  settings = {
+    enableMenu = true;
+    minimizeToTray = true;
+    discordBranch = "stable";
+  };
+
+  vencord = {
+    useQuickCss = true;
+    noTrack = true;  # Disable Discord tracking
+  };
+};
 ```
+
+**Features:**
+- Enhanced Discord client with better Linux/Wayland support
+- Custom Tokyo Night Storm theme matching terminal and NvChad
+- Vencord integration for privacy and customization
+- NoTrack plugin to disable Discord telemetry
 
 #### wayland.nix
 Wayland compositor tools (Waybar, Wofi)
@@ -536,7 +558,9 @@ modules.wayland.enable = true;
 #### stylix.nix
 Stylix theme targets for user applications
 
-**Themed apps:** Kitty, Neovim, Thunar, Vesktop, Hyprland, Hyprlock, Waybar, Wofi, Qutebrowser, GTK
+**Themed apps:** Kitty, Neovim, Thunar, Hyprland, Hyprlock, Waybar, Wofi, Qutebrowser, GTK
+
+**Note:** Vesktop uses a custom Tokyo Night Storm theme (configured in vdesktop.nix) instead of Stylix for better Discord-specific styling.
 
 </details>
 
