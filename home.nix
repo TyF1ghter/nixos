@@ -9,7 +9,7 @@
     ./homemanager/nvchad.nix
     ./homemanager/terminal.nix
     ./homemanager/browsers.nix
-    ./homemanager/desktop-apps.nix
+    ./homemanager/vdesktop.nix
     ./homemanager/stylix.nix
 
     # Wayland/Hyprland modules
@@ -26,7 +26,7 @@
     nvchad.enable = true;
     terminal.enable = true;
     browsers.enable = true;
-    desktop-apps.enable = true;
+    vdesktop.enable = true;
     wayland.enable = true;
     stylix-config.enable = true;
   };
