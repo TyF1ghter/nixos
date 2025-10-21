@@ -95,8 +95,8 @@ in
           device = "intel_backlight";
           format = "{icon} {percent}%";
           format-icons = [ "󰃞" "󰃟" "󰃠" ];
-          on-scroll-up = "brightnessctl set 5%+";
-          on-scroll-down = "brightnessctl set 5%-";
+          on-scroll-up = "${pkgs.brightnessctl}/bin/brightnessctl set 5%+";
+          on-scroll-down = "${pkgs.brightnessctl}/bin/brightnessctl set 5%-";
           min-length = 6;
         };
 
@@ -117,11 +117,10 @@ in
           format = "<span size='larger'>{icon}</span>{volume}%";
           tooltip = true;
           format-muted = "<span size='larger'>󰝟</span> {volume}%";
-          on-click = "wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle";
-          on-click-right = "pavucontrol";
-          on-double-click = "pavucontrol";
-          on-scroll-up = "wpctl set-volume -l 1.4 @DEFAULT_AUDIO_SINK@ 5%+";
-          on-scroll-down = "wpctl set-volume -l 1.4 @DEFAULT_AUDIO_SINK@ 5%-";
+          on-click = "${pkgs.wireplumber}/bin/wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle";
+          on-click-right = "${pkgs.pavucontrol}/bin/pavucontrol";
+          on-scroll-up = "${pkgs.wireplumber}/bin/wpctl set-volume -l 1.4 @DEFAULT_AUDIO_SINK@ 5%+";
+          on-scroll-down = "${pkgs.wireplumber}/bin/wpctl set-volume -l 1.4 @DEFAULT_AUDIO_SINK@ 5%-";
           scroll-step = 5;
           format-icons = {
             headphone = "󰋋 ";
@@ -138,9 +137,9 @@ in
           format = "{format_source}";
           format-source = "󰍬 {volume}%";
           format-source-muted = "󰍭 {volume}%";
-          on-click = "wpctl set-mute @DEFAULT_AUDIO_SOURCE@ toggle";
-          on-scroll-up = "wpctl set-volume @DEFAULT_AUDIO_SOURCE@ 5%+";
-          on-scroll-down = "wpctl set-volume @DEFAULT_AUDIO_SOURCE@ 5%-";
+          on-click = "${pkgs.wireplumber}/bin/wpctl set-mute @DEFAULT_AUDIO_SOURCE@ toggle";
+          on-scroll-up = "${pkgs.wireplumber}/bin/wpctl set-volume @DEFAULT_AUDIO_SOURCE@ 5%+";
+          on-scroll-down = "${pkgs.wireplumber}/bin/wpctl set-volume @DEFAULT_AUDIO_SOURCE@ 5%-";
           scroll-step = 5;
         };
 
@@ -158,7 +157,7 @@ in
           max-length = 10;
           tooltip = true;
           tooltip-format = "Memory - {used:0.1f}GB used";
-          on-click = "kitty -e btop";
+          on-click = "${pkgs.kitty}/bin/kitty -e ${pkgs.btop}/bin/btop";
         };
       }];
     };
