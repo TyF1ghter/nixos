@@ -22,8 +22,8 @@ in
     ];
 
     # Window rule for Hyprland opacity (if hyprland is enabled)
-    wayland.windowManager.hyprland = mkIf config.modules.hyprland.enable {
-      settings.windowrulev2 = [
+    wayland.windowManager.hyprland.settings = mkIf (config.wayland.windowManager.hyprland.enable or false) {
+      windowrulev2 = [
         "opacity ${toString cfg.opacity} ${toString cfg.opacity},class:^(Element)$"
       ];
     };
