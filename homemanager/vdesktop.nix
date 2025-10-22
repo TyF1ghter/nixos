@@ -116,8 +116,8 @@ in
         --deprecated-card-editable-bg: rgba(36, 40, 59, 0.6) !important;
 
         /* Text Colors - Brighter for better readability */
-        --text-normal: #C0CAF5 !important;           /* Brighter main text */
-        --text-muted: #9AA5CE !important;            /* Brighter muted text */
+        --text-normal: #212736 !important;           /* Brighter main text */
+        --text-muted: #2AC3DE !important;            /* Brighter muted text */
         --text-link: #7DCFFF !important;             /* Bright cyan for links */
         --text-positive: #9ECE6A !important;         /* Green */
         --text-warning: #E0AF68 !important;          /* Yellow */
@@ -170,7 +170,7 @@ in
       /* Improve text contrast and readability */
       .messageContent_f9f2ca,
       .content_f12fa1 {
-        color: #C0CAF5 !important;
+        color: #7DCFFF !important;
         text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
       }
 

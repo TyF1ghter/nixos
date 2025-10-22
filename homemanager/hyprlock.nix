@@ -12,7 +12,7 @@ in
     background = {
       path = mkOption {
         type = types.str;
-        default = "${config.home.homeDirectory}/Pictures/bluestars.jpg";
+        default = "${config.home.homeDirectory}/Pictures/lawson.jpg";
         description = "Path to background image. Uses home directory variable for reproducibility.";
       };
 
@@ -150,19 +150,24 @@ in
 
       # Auth
       auth {
-          fingerprint:enabled = ${boolToString cfg.auth.fingerprintEnabled}
+          fingerprint {
+              enabled = ${boolToString cfg.auth.fingerprintEnabled}
+              ready_message = (Fingerprint ready)
+              present_message = (Scanning fingerprint...)
+
+          }
       }
 
-      # FINGERPRINT
-      {
-        monitor = "";
-        text = "$FPRINTPROMPT";
-        color = "$text";
-        font_size = 14;
-        font_family = ${cfg.labels.fontFamily};
-        position = "0, -107";
-        halign = "center";
-        valign = "center";
+      # FINGERPRINT STATUS
+      label {
+          monitor =
+          text = $FPRINTPROMPT
+          color = rgba(235, 188, 186, 0.9)
+          font_size = 18
+          font_family = ${cfg.labels.fontFamily}
+          position = 0, -100
+          halign = center
+          valign = center
       }
 
       # INPUT FIELD
