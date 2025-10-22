@@ -64,7 +64,7 @@ in
     opacity = mkOption {
       type = types.float;
       default = 0.80;
-      description = "Window opacity for Vesktop";
+      description = "Window opacity for Vesktop - balanced with CSS for selective transparency";
     };
   };
 
@@ -77,6 +77,8 @@ in
         enableMenu = cfg.settings.enableMenu;
         minimizeToTray = cfg.settings.minimizeToTray;
         discordBranch = cfg.settings.discordBranch;
+        # Use "none" to allow CSS transparency to work on Linux
+        transparencyOption = "none";
       };
 
       # Vencord settings for transparency theme
@@ -148,23 +150,40 @@ in
         --mention-background: rgba(122, 162, 247, 0.15) !important;
       }
 
-      /* Make main app background fully transparent like NvChad */
+      /* Make main app background transparent like NvChad */
       .appMount_ea7e65,
-      .bg_d4b6c5,
       .app_de4237,
       .layers_a23c37,
-      .bg_e3e2e0 {
+      .base_a4d4d9 {
         background-color: transparent !important;
+      }
+
+      /* Sidebar and server list should be transparent */
+      .sidebar_a4d4d9,
+      .panels_a4d4d9,
+      .container_cbd271,
+      [class*="guilds"],
+      [class*="sidebar"] {
+        background-color: rgba(30, 33, 48, 0.3) !important;  /* More transparent */
       }
 
       /* Improve text contrast and readability */
       .messageContent_f9f2ca,
-      .content_f12fa1,
-      .username_d30d99,
-      .name_d8bfb3,
-      .title_a7d72e {
+      .content_f12fa1 {
         color: #C0CAF5 !important;
         text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+      }
+
+      /* Make usernames much brighter and higher contrast */
+      .username_d30d99,
+      .name_d8bfb3,
+      .title_a7d72e,
+      h3[class*="username"],
+      [class*="username"],
+      [class*="headerText"] {
+        color: #E0E6F8 !important;  /* Much brighter white */
+        font-weight: 600 !important;
+        text-shadow: 0 1px 3px rgba(0, 0, 0, 0.8) !important;
       }
 
       /* Brighter icons for visibility */
@@ -196,9 +215,67 @@ in
         background-color: rgba(68, 75, 106, 0.6) !important;  /* #444B6A */
         color: #0DB9D7 !important;
       }
+
+      /* Force images and media to have full opacity - no transparency */
+      img,
+      video,
+      .imageWrapper_d4597d,
+      .imageContent_dc5d92,
+      .mediaPlayer_e8476d,
+      .embedWrapper_b4c0d8,
+      .embedImage_d4b6c5,
+      .originalLink_d60142,
+      .imageAccessory_ada163,
+      [class*="image"],
+      [class*="Image"],
+      [class*="media"],
+      [class*="Media"],
+      [class*="attachment"],
+      [class*="Attachment"],
+      [class*="embed"] img,
+      [class*="Embed"] img {
+        opacity: 1 !important;
+      }
+
+      /* The main chat/message area needs to NOT be transparent */
+      /* These selectors target the message/content containers */
+      .chat_a7d72e,
+      .content_a4d4d9,
+      .container_fdd4bf,
+      .messagesWrapper_ea2b0e,
+      .scrollerInner_e2e187,
+      .message_ccca67,
+      [class*="chatContent"],
+      [class*="messagesWrapper"] {
+        background-color: rgba(36, 40, 59, 1) !important;  /* Fully opaque */
+      }
+
+      /* Message content and images must be opaque */
+      .messageContent_f9f2ca,
+      .imageWrapper_d4597d,
+      .imageContent_dc5d92,
+      .messageAttachment_c900c7,
+      .embedWrapper_b4c0d8,
+      .imageAccessory_ada163 {
+        background-color: rgba(36, 40, 59, 1) !important;  /* Fully opaque */
+      }
+
+      /* Images themselves must be fully visible */
+      img,
+      video {
+        opacity: 1 !important;
+        background-color: rgba(30, 33, 48, 1) !important;  /* Fully opaque */
+      }
+
+      /* Icons should also be fully opaque */
+      svg,
+      [class*="icon"] {
+        opacity: 1 !important;
+      }
     '';
 
     # Window rule for Hyprland opacity (if hyprland is enabled)
+    # Apply window transparency at compositor level
     wayland.windowManager.hyprland = mkIf config.modules.hyprland.enable {
       settings.windowrulev2 = [
         "opacity ${toString cfg.opacity} ${toString cfg.opacity},class:^(vesktop)$"
