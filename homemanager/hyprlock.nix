@@ -12,7 +12,7 @@ in
     background = {
       path = mkOption {
         type = types.str;
-        default = "${config.home.homeDirectory}/Pictures/worldblue.png";
+        default = "${config.home.homeDirectory}/Pictures/bluestars.jpg";
         description = "Path to background image. Uses home directory variable for reproducibility.";
       };
 
