@@ -65,14 +65,14 @@
   };
 
   # Shell aliases
-  # Note: These assume the config is at /home/nix/nixos
-  # Update the path if you clone to a different location
+  # These use the hostname from config.networking.hostName for portability
+  # Paths assume the config is at ~/nixos
   programs.bash.shellAliases = {
-    updoot = "sudo nixos-rebuild switch --flake ~/.config/nixos#$(hostname)";
-    nixconf = "nvim ~/.config/nixos/hosts/$(hostname)/configuration.nix";
-    homeconf = "nvim ~/.config/nixos/home.nix";
-    flakeconf = "nvim ~/.config/nixos/flake.nix";
-    flakedoot = "nix flake update ~/.config/nixos";
+    updoot = "sudo nixos-rebuild switch --flake ~/nixos#" + config.networking.hostName;
+    nixconf = "nvim ~/nixos/hosts/" + config.networking.hostName + "/configuration.nix";
+    homeconf = "nvim ~/nixos/home.nix";
+    flakeconf = "nvim ~/nixos/flake.nix";
+    flakedoot = "nix flake update ~/nixos";
     win10 = "quickemu --vm windows-10.conf";
     rebar = "pkill waybar && hyprctl dispatch exec waybar";
     tdown = "sudo tailscale down";

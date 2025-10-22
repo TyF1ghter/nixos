@@ -61,12 +61,15 @@
   };
 
   # Shell aliases
+  # These automatically use the hostname from config.networking.hostName for portability
+  # Paths assume the config is at ~/nixos
   programs.bash.shellAliases = {
     # NixOS management
-    updoot = "sudo nixos-rebuild switch --flake /home/ty/nixos";
-    nixconf = "nvim /home/ty/nixos/hosts/9310/configuration.nix";
-    homeconf = "nvim /home/ty/nixos/home.nix";
-    flakeconf = "nvim /home/ty/nixos/flake.nix";
+    updoot = "sudo nixos-rebuild switch --flake ~/nixos#" + config.networking.hostName;
+    nixconf = "nvim ~/nixos/hosts/" + config.networking.hostName + "/configuration.nix";
+    homeconf = "nvim ~/nixos/home.nix";
+    flakeconf = "nvim ~/nixos/flake.nix";
+    flakedoot = "nix flake update ~/nixos";
 
     # Editor aliases
     vi = "nvim";

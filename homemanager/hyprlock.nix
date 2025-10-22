@@ -12,8 +12,8 @@ in
     background = {
       path = mkOption {
         type = types.str;
-        default = "~/Pictures/lawsons.jpg";
-        description = "Path to background image";
+        default = "${config.home.homeDirectory}/Pictures/worldblue.png";
+        description = "Path to background image. Uses home directory variable for reproducibility.";
       };
 
       blurPasses = mkOption {

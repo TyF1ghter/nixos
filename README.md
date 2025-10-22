@@ -176,12 +176,27 @@ This is a fully declarative NixOS configuration featuring a modern Hyprland desk
 
    > **Tip:** You can disable any module by setting it to `false`. Start with all enabled and disable what you don't want.
 
-9. **Install NixOS:**
+9. **Add wallpaper images (required for hyprlock and hyprpaper):**
+   ```bash
+   # Create Pictures directory if it doesn't exist
+   mkdir -p /mnt/home/YOUR_USERNAME/Pictures
+
+   # Add your wallpaper image named 'worldblue.png' to ~/Pictures/
+   # Or customize the wallpaper paths in home.nix:
+   # - hyprlock.background.path for lock screen
+   # - hyprpaper.wallpapers and hyprpaper.monitors for desktop wallpapers
+   ```
+
+   > **Note:** The default configuration expects `~/Pictures/worldblue.png`. You can either:
+   > - Add an image with that name to your Pictures folder, OR
+   > - Override the paths in `home.nix` to use your preferred wallpaper
+
+10. **Install NixOS:**
    ```bash
    nixos-install --flake .#YOUR_HOSTNAME
    ```
 
-10. **Reboot:**
+11. **Reboot:**
     ```bash
     reboot
     ```
@@ -257,8 +272,20 @@ Before installing, make sure you've edited the template and:
 - [ ] Uncommented AMD settings if using AMD integrated graphics
 - [ ] Added your host to `flake.nix`
 - [ ] Reviewed and customized `home.nix`
+- [ ] Added wallpaper image `worldblue.png` to `~/Pictures/` or customized paths in `home.nix`
 
 > **Key Point:** The template files in `hosts/template/` are your starting point. Copy them, then edit to match your specific system configuration.
+
+### Required Assets
+
+This configuration expects certain assets to be present:
+
+**Wallpaper Images:**
+- Default path: `~/Pictures/worldblue.png`
+- Used by: hyprlock (lock screen) and hyprpaper (desktop wallpaper)
+- **To customize:** Override paths in `home.nix` or provide an image with the default name
+
+The configuration uses `${config.home.homeDirectory}` variables for paths, making it work automatically for any username.
 
 ## Structure
 

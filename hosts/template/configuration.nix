@@ -10,9 +10,20 @@
     # nixos-generate-config --show-hardware-config > hosts/HOSTNAME/hardware-configuration.nix
     ./hardware-configuration.nix
 
-    # === Hardware modules ===
-    # Uncomment the modules you need for your hardware
-    # ../../modules/hardware/nvidiahybrid.nix  # NVIDIA hybrid graphics (Intel + NVIDIA)
+    # === Graphics Configuration ===
+    # IMPORTANT: Choose ONE graphics module based on your hardware
+    # Do NOT enable both modules at the same time!
+
+    # Option 1: Integrated graphics only (Intel or AMD)
+    # Use this for laptops/systems without dedicated GPU
+    ../../modules/hardware/integrated-graphics.nix
+
+    # Option 2: NVIDIA hybrid graphics (Intel + NVIDIA)
+    # Use this for laptops with NVIDIA + Intel dual graphics
+    # Remember to update PCI bus IDs in the module!
+    # ../../modules/hardware/nvidiahybrid.nix
+
+    # === Other Hardware Modules ===
     ../../modules/hardware/audio.nix
     ../../modules/hardware/bluetooth.nix
 
@@ -73,13 +84,14 @@
   };
 
   # Shell aliases
-  # Note: Update paths if you clone to a different location than ~/.config/nixos
+  # These automatically use the hostname from config.networking.hostName for portability
+  # Update paths if you clone to a different location than ~/nixos
   programs.bash.shellAliases = {
-    updoot = "sudo nixos-rebuild switch --flake ~/.config/nixos#$(hostname)";
-    nixconf = "nvim ~/.config/nixos/hosts/$(hostname)/configuration.nix";
-    homeconf = "nvim ~/.config/nixos/home.nix";
-    flakeconf = "nvim ~/.config/nixos/flake.nix";
-    flakedoot = "nix flake update ~/.config/nixos";
+    updoot = "sudo nixos-rebuild switch --flake ~/nixos#" + config.networking.hostName;
+    nixconf = "nvim ~/nixos/hosts/" + config.networking.hostName + "/configuration.nix";
+    homeconf = "nvim ~/nixos/home.nix";
+    flakeconf = "nvim ~/nixos/flake.nix";
+    flakedoot = "nix flake update ~/nixos";
     rebar = "pkill waybar && hyprctl dispatch exec waybar";
     vi = "nvim";
     vim = "nvim";

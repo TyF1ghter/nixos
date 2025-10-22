@@ -17,8 +17,8 @@ in
 
     wallpapers = mkOption {
       type = types.listOf types.str;
-      default = [ "/home/ty/Pictures/worldblue.png" ];
-      description = "List of wallpaper paths to preload";
+      default = [ "${config.home.homeDirectory}/Pictures/worldblue.png" ];
+      description = "List of wallpaper paths to preload. Uses relative path from home directory.";
     };
 
     monitors = mkOption {
@@ -39,14 +39,14 @@ in
       default = [
         {
           monitor = "eDP-1";
-          path = "/home/ty/Pictures/worldblue.png";
+          path = "${config.home.homeDirectory}/Pictures/worldblue.png";
         }
         {
           monitor = "";
-          path = "/home/ty/Pictures/worldblue.png";
+          path = "${config.home.homeDirectory}/Pictures/worldblue.png";
         }
       ];
-      description = "Monitor-specific wallpaper configurations";
+      description = "Monitor-specific wallpaper configurations. Paths use home directory variable for reproducibility.";
     };
 
     splash = mkOption {

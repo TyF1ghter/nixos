@@ -38,27 +38,26 @@
     wofi.enable = true;
     hyprland.enable = true;
 
+    # Screen locker configuration
+    # Note: Override background.path with your preferred wallpaper
+    # Default uses worldblue.png from ~/Pictures/
     hyprlock = {
       enable = true;
-      background.path = "~/Pictures/lawsons.jpg";
+      # background.path can be overridden per-host or left as default
     };
 
+    # Wallpaper daemon configuration
+    # Note: Override wallpapers and monitors per-host if needed
+    # Default configuration works for most laptops with eDP-1 display
     hyprpaper = {
       enable = true;
-      wallpapers = [
-        "/home/ty/Pictures/worldblue.png"
-        "/home/nix/Pictures/wolrdblue.png"
-      ];
-      monitors = [
-        {
-          monitor = "eDP-1";
-          path = "/home/ty/Pictures/worldblue.png";
-        }
-        {
-          monitor = "";
-          path = "/home/ty/Pictures/worldblue.png";
-        }
-      ];
+      # Default wallpapers and monitor config are set in homemanager/hyprpaper.nix
+      # Uncomment and customize below to override:
+      # wallpapers = [ "${config.home.homeDirectory}/Pictures/yourimage.png" ];
+      # monitors = [
+      #   { monitor = "eDP-1"; path = "${config.home.homeDirectory}/Pictures/yourimage.png"; }
+      #   { monitor = ""; path = "${config.home.homeDirectory}/Pictures/yourimage.png"; }
+      # ];
     };
   };
 
