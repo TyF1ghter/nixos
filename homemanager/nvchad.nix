@@ -15,6 +15,7 @@ in
       enable = true;
 
       extraPackages = with pkgs; [
+        nodejs
         nodePackages.bash-language-server
         docker-compose-language-service
         dockerfile-language-server
@@ -22,8 +23,21 @@ in
         nixd
         neovim
         (python3.withPackages(ps: with ps; [
+          # LSP and linting
           python-lsp-server
           flake8
+
+          # Development packages
+          python-dotenv
+          pandas
+          requests
+          anthropic
+          openai
+
+          # Additional useful tools
+          ipython
+          black
+          pytest
         ]))
       ];
 
@@ -57,10 +71,70 @@ in
               })
             end,
           },
+          {
+            "zbirenbaum/copilot.lua",
+            cmd = "Copilot",
+            event = "InsertEnter",
+            config = function()
+              require("copilot").setup({
+                suggestion = {
+                  enabled = true,
+                  auto_trigger = true,
+                  debounce = 75,
+                  keymap = {
+                    accept = "<M-l>",
+                    accept_word = false,
+                    accept_line = false,
+                    next = "<M-]>",
+                    prev = "<M-[>",
+                    dismiss = "<C-]>",
+                  },
+                },
+                panel = {
+                  enabled = true,
+                  auto_refresh = false,
+                  keymap = {
+                    jump_prev = "[[",
+                    jump_next = "]]",
+                    accept = "<CR>",
+                    refresh = "gr",
+                    open = "<M-CR>",
+                  },
+                },
+                filetypes = {
+                  yaml = false,
+                  markdown = false,
+                  help = false,
+                  gitcommit = false,
+                  gitrebase = false,
+                  hgcommit = false,
+                  svn = false,
+                  cvs = false,
+                  ["."] = false,
+                  nix = true,
+                  python = true,
+                  cpp = true,
+                  rust = true,
+                  javascript = true,
+                  typescript = true,
+                  sh = true,
+                  bash = true,
+                },
+              })
+            end,
+          },
         }
       '';
 
       extraConfig = ''
+        -- Custom filetype detections
+        vim.api.nvim_create_autocmd({ "BufRead", "BufNewFile" }, {
+          pattern = "*.code-workspace",
+          callback = function()
+            vim.bo.filetype = "jsonc"
+          end,
+        })
+
         -- Transparency toggle functionality
         local transparency_enabled = true  -- Start with transparency enabled by default
 
