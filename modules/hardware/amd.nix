@@ -13,17 +13,17 @@
     # AMD-specific graphics packages
     extraPackages = with pkgs; [
       # AMD hardware video acceleration
-      mesa.drivers              # Mesa drivers (includes radeonsi, radv)
+      mesa              # Mesa drivers (includes radeonsi, radv)
       libvdpau-va-gl           # VDPAU driver
       rocmPackages.clr.icd     # ROCm OpenCL ICD for compute tasks
 
       # Additional AMD acceleration libraries
-      amdvlk                   # AMD official Vulkan driver (alternative to radv)
+      #amdvlk                   # AMD official Vulkan driver (alternative to radv)
     ];
 
     # 32-bit driver support for gaming compatibility
     extraPackages32 = with pkgs.pkgsi686Linux; [
-      mesa.drivers
+      mesa
       libvdpau-va-gl
     ];
   };
@@ -74,7 +74,7 @@
   # Useful system packages for AMD systems
   environment.systemPackages = with pkgs; [
     # Graphics utilities
-    glxinfo           # OpenGL information
+    #glxinfo           # OpenGL information
     vulkan-tools      # Vulkan utilities (vulkaninfo)
     mesa-demos        # Mesa demos and glxgears
     libva-utils       # VA-API utilities (vainfo)
