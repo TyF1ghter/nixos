@@ -43,10 +43,6 @@
 
       # Power profile mode: 0=default, 1=auto, 2=low, 3=high, 4=manual, 5=custom
       "amdgpu.ppfeaturemask=0xffffffff"  # Enable all power features
-
-      # Performance mode settings
-      "amdgpu.gpu_recovery=1"        # Enable GPU recovery
-      "amdgpu.lockup_timeout=10000"  # Longer timeout for heavy workloads
     ];
   };
 
@@ -64,10 +60,6 @@
 
     # Enable AMD FreeSync/VRR support on Wayland
     WLR_DRM_NO_ATOMIC = "0";
-
-
-    # Force maximum GPU performance
-    AMD_PERFORMANCE_PROFILE = "high";
   };
 
   # Video drivers for X11/Xorg
@@ -77,7 +69,7 @@
   hardware.cpu.amd.updateMicrocode = lib.mkDefault config.hardware.enableRedistributableFirmware;
 
   # Enable AMD CPU frequency scaling
-  powerManagement.cpuFreqGovernor = lib.mkDefault "performance";  # Better than ondemand for modern AMD
+  powerManagement.cpuFreqGovernor = lib.mkDefault "schedutil";  # Better than ondemand for modern AMD
 
   # Useful system packages for AMD systems
   environment.systemPackages = with pkgs; [
@@ -93,4 +85,25 @@
     clinfo            # OpenCL information for compute tasks
   ];
 
+  # Specialization: Performance mode for gaming
+  # Boot with: sudo nixos-rebuild boot --specialisation gaming
+  specialisation = {
+    gaming.configuration = {
+      # Set CPU governor to performance mode
+      powerManagement.cpuFreqGovernor = lib.mkForce "performance";
+
+      # Add performance-focused kernel parameters
+      boot.kernelParams = [
+        # Force highest GPU performance level
+        "amdgpu.gpu_recovery=1"        # Enable GPU recovery
+        "amdgpu.lockup_timeout=10000"  # Longer timeout for heavy workloads
+      ];
+
+      # Disable power management features for maximum performance
+      environment.variables = {
+        # Force maximum GPU performance
+        AMD_PERFORMANCE_PROFILE = "high";
+      };
+    };
+  };
 }
