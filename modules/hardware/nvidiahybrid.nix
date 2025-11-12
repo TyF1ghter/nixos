@@ -11,7 +11,7 @@
       enable = true;
       enable32Bit = true;  # Required for 32-bit games/applications
       extraPackages = with pkgs; [
-        vaapiVdpau      # VDPAU backend for VA-API
+        libva-vdpau-driver      # VDPAU backend for VA-API
         libvdpau-va-gl  # VDPAU driver
       ];
       extraPackages32 = with pkgs.pkgsi686Linux; [ libva ];
