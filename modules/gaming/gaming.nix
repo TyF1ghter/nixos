@@ -29,7 +29,7 @@
 
   environment.systemPackages = with pkgs; [
     lutris
-    protonup
+    protonup-ng
     mangohud
     mangojuice
     unigine-heaven
