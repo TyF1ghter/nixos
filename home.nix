@@ -13,15 +13,20 @@
     ./homemanager/element.nix
     ./homemanager/stylix.nix
 
-    # Wayland/Hyprland modules
+    # Wayland/Hyprland modules (Hyprland-specific commented out)
     ./homemanager/wayland.nix
-    ./homemanager/hyprland.nix
+    # ./homemanager/hyprland.nix
     ./homemanager/waybar.nix
     ./homemanager/wofi.nix
     ./homemanager/dunst.nix
-    ./homemanager/hyprlock.nix
-    ./homemanager/hyprpaper.nix
+    # ./homemanager/hyprlock.nix
+    # ./homemanager/hyprpaper.nix
     ./homemanager/btop.nix
+
+    # Niri modules
+    ./homemanager/niri.nix
+    ./homemanager/swaylock.nix
+    ./homemanager/swayidle.nix
   ];
 
   # Enable modules
@@ -42,7 +47,7 @@
     # Note: Override background.path with your preferred wallpaper
     # Default uses worldblue.png from ~/Pictures/
     hyprlock = {
-      enable = true;
+      enable = false;  # Disabled - using swaylock
       # background.path can be overridden per-host or left as default
     };
 
@@ -50,7 +55,7 @@
     # Note: Override wallpapers and monitors per-host if needed
     # Default configuration works for most laptops with eDP-1 display
     hyprpaper = {
-      enable = true;
+      enable = false;  # Disabled for Niri
       # Default wallpapers and monitor config are set in homemanager/hyprpaper.nix
       # Uncomment and customize below to override:
       # wallpapers = [ "${config.home.homeDirectory}/Pictures/yourimage.png" ];
@@ -58,6 +63,35 @@
       #   { monitor = "eDP-1"; path = "${config.home.homeDirectory}/Pictures/yourimage.png"; }
       #   { monitor = ""; path = "${config.home.homeDirectory}/Pictures/yourimage.png"; }
       # ];
+    };
+
+    # Niri compositor
+    niri = {
+      enable = true;
+      terminal = "kitty";
+      fileManager = "thunar";
+      menu = "wofi --show drun";
+    };
+
+    # Screen locker (swaylock instead of hyprlock)
+    swaylock = {
+      enable = true;
+      image.path = "${config.home.homeDirectory}/Pictures/lawson.jpg";
+      effects = {
+        blur = "5x3";
+        clock = true;
+        fadeIn = 0.2;
+      };
+    };
+
+    # Idle daemon (swayidle instead of hypridle)
+    swayidle = {
+      enable = true;
+      timeouts = {
+        lock = 300;        # Lock after 5 minutes
+        displayOff = 600;  # Turn off display after 10 minutes
+        suspend = 900;     # Suspend after 15 minutes
+      };
     };
   };
 

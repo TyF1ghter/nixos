@@ -17,7 +17,8 @@
     ../../modules/services/system-services.nix
 
     # Desktop modules
-    ../../modules/desktop/hyprland.nix
+    # ../../modules/desktop/hyprland.nix    # Disabled - using Niri
+    ../../modules/desktop/niri.nix
     ../../modules/desktop/xdg.nix
     ../../modules/desktop/thunar.nix
 
