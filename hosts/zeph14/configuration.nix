@@ -109,10 +109,11 @@
   };
 
   # Home Manager
-  home-manager = {
-    extraSpecialArgs = { inherit inputs; };
-    users = {
-      "ty" = import ../../home.nix;  # CHANGE THIS to match username above
+  home-manager.users.ty = {
+    imports = [ ../../home.nix ];
+    config.modules = {
+      niri.enable = true;
+      hyprland.enable = false;
     };
   };
 

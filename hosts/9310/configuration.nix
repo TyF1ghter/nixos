@@ -1,5 +1,5 @@
 # Host-specific configuration for XPS 9310
-{ config, pkgs, inputs, lib, ... }:
+{ config, pkgs, inputs, lib, username, ... }:
 
 {
   imports = [
@@ -17,7 +17,7 @@
     ../../modules/services/system-services.nix
 
     # Desktop modules
-    # ../../modules/desktop/hyprland.nix    # Disabled - using Niri
+    # ../../modules/desktop/hyprland.nix # Disabled - using Niri
     ../../modules/desktop/niri.nix
     ../../modules/desktop/xdg.nix
     ../../modules/desktop/thunar.nix
@@ -61,35 +61,24 @@
     settings = pkgs.lib.importTOML ../../starship.toml;
   };
 
-  # Shell aliases
-  # These automatically use the hostname from config.networking.hostName for portability
-  # Paths assume the config is at ~/nixos
+  # Shell aliases (portable)
   programs.bash.shellAliases = {
-    # NixOS management
     updoot = "sudo nixos-rebuild switch --flake ~/nixos#" + config.networking.hostName;
     nixconf = "nvim ~/nixos/hosts/" + config.networking.hostName + "/configuration.nix";
     homeconf = "nvim ~/nixos/home.nix";
     flakeconf = "nvim ~/nixos/flake.nix";
     flakedoot = "nix flake update ~/nixos";
-
-    # Editor aliases
-    vi = "nvim";
-    vim = "nvim";
-
-    # VM and services
     win10 = "quickemu --vm windows-10.conf";
     rebar = "pkill waybar && hyprctl dispatch exec waybar";
-
-    # Tailscale
     tdown = "sudo tailscale down";
     tup = "sudo tailscale up";
-
-    # Utilities
     mixer = "pulsemixer";
+    vi = "nvim";
+    vim = "nvim";
   };
 
   # User account
-  users.users.ty = {
+  users.users.${username} = {
     isNormalUser = true;
     description = "ty";
     extraGroups = [
@@ -106,7 +95,13 @@
     useGlobalPkgs = true;
     useUserPackages = true;
     extraSpecialArgs = { inherit inputs; };
-    users.ty = import ../../home.nix;
+    users.${username} = {
+      imports = [ ../../home.nix ];
+      config.modules = {
+        # Enable the DankMaterialShell Niri desktop environment
+        niri.enable = true;
+      };
+    };
   };
 
   # System packages
@@ -128,10 +123,15 @@
     fzf
     gvfs
     udiskie
+    file-roller
 
     # System utilities
     usbutils
     rpi-imager
+    polkit_gnome
+    brightnessctl
+    ydotool
+    wl-clipboard
 
     # Browsers
     qutebrowser
@@ -139,30 +139,22 @@
     mullvad-browser
     librewolf
 
-    # Hyprland ecosystem
+    # Wayland / Hyprland / Niri ecosystem
     hyprland-protocols
     hyprpicker
     xdg-desktop-portal-hyprland
     hyprpaper
     hyprcursor
     hyprshot
-
-    # Wayland utilities
     waybar
     wofi
     swww
     grim
     dunst
     wlogout
-
+    
     # Terminal
     kitty
-
-    # System tools
-    polkit_gnome
-    brightnessctl
-    ydotool
-    wl-clipboard
 
     # XDG & Qt support
     xdg-utils
@@ -227,10 +219,10 @@
 
     # AI
     claude-code
+    gemini-cli
   ];
 
   # Additional programs
-  programs.file-roller.enable = true;
   programs.nm-applet.enable = true;
   programs.waybar.enable = true;
 
@@ -246,6 +238,7 @@
   # Automatic garbage collection
   nix.gc = {
     automatic = true;
+
     dates = "weekly";
     options = "--delete-older-than 7d";
   };

@@ -12,75 +12,75 @@ in
     indicator = {
       radius = mkOption {
         type = types.int;
-        default = 100;
+        default = 120;
         description = "Radius of the indicator circle";
       };
 
       thickness = mkOption {
         type = types.int;
-        default = 7;
-        description = "Thickness of the indicator ring";
+        default = 0;
+        description = "Thickness of the indicator ring (0 = no ring)";
       };
     };
 
     colors = {
       background = mkOption {
         type = types.str;
-        default = "1a1b26";
-        description = "Background color (hex without #)";
+        default = "00000000";
+        description = "Background color - transparent (hex without #)";
       };
 
       text = mkOption {
         type = types.str;
-        default = "c0caf5";
-        description = "Text color (hex without #)";
+        default = "e0def4";
+        description = "Text color - matches hyprlock light gray (hex without #)";
       };
 
       ring = mkOption {
         type = types.str;
-        default = "7aa2f7";
-        description = "Ring color (hex without #)";
+        default = "00000000";
+        description = "Ring color - transparent (no ring) (hex without #)";
       };
 
       ringVer = mkOption {
         type = types.str;
-        default = "9ece6a";
-        description = "Ring color during verification (hex without #)";
+        default = "00000000";
+        description = "Ring color during verification - transparent (hex without #)";
       };
 
       ringWrong = mkOption {
         type = types.str;
-        default = "f7768e";
-        description = "Ring color on wrong password (hex without #)";
+        default = "ebbcba";
+        description = "Ring color on wrong password - peachy (hex without #)";
       };
 
       key = mkOption {
         type = types.str;
-        default = "bb9af7";
-        description = "Highlight color for key press (hex without #)";
+        default = "9ccfd8";
+        description = "Highlight color for key press - cyan (hex without #)";
       };
 
       separator = mkOption {
         type = types.str;
         default = "00000000";
-        description = "Separator color (hex without #)";
+        description = "Separator color - transparent (hex without #)";
       };
 
       inside = mkOption {
         type = types.str;
-        default = "1a1b26";
-        description = "Inside color of indicator (hex without #)";
+        default = "00000080";
+        description = "Inside color - semi-transparent black like hyprlock (hex without #)";
       };
 
       insideVer = mkOption {
         type = types.str;
-        default = "1a1b26";
+        default = "00000080";
         description = "Inside color during verification (hex without #)";
       };
 
       insideWrong = mkOption {
         type = types.str;
-        default = "1a1b26";
+        default = "00000080";
         description = "Inside color on wrong password (hex without #)";
       };
     };
@@ -102,8 +102,14 @@ in
     image = {
       path = mkOption {
         type = types.str;
-        default = "${config.home.homeDirectory}/Pictures/lawson.jpg";
+        default = "${config.wallpaperDir}/${cfg.image.fileName}";
         description = "Path to background image";
+      };
+
+      fileName = mkOption {
+        type = types.str;
+        default = "cat_lofi_cafe.jpg";
+        description = "Filename of the wallpaper in the global wallpaper directory";
       };
 
       scaling = mkOption {
@@ -173,6 +179,11 @@ in
   };
 
   config = mkIf cfg.enable {
+    programs.swaylock = {
+      enable = true;
+      package = pkgs.swaylock-effects;
+    };
+
     home.packages = with pkgs; [
       swaylock-effects
     ];
@@ -185,7 +196,7 @@ in
       daemonize
       ${optionalString cfg.effects.clock "clock"}
       ${optionalString cfg.effects.indicator "indicator"}
-      ${optionalString (!cfg.effects.screenshots) "ignore-empty-password"}
+      # ignore-empty-password removed to allow fingerprint-only authentication
 
       # Image and effects
       image=${cfg.image.path}

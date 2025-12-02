@@ -108,10 +108,19 @@
   };
 
   # Home Manager
-  home-manager = {
-    extraSpecialArgs = { inherit inputs; };
-    users = {
-      "USERNAME" = import ../../home.nix;  # CHANGE THIS to match username above
+  home-manager.users.USERNAME = {
+    imports = [ ../../home.nix ];
+    config.modules = {
+      # === Desktop Environment ===
+      # Choose ONE of the following desktop environments to enable.
+
+      # Option 1: Hyprland
+      hyprland.enable = true;
+      niri.enable = false;
+
+      # Option 2: Niri (DankMaterialShell version)
+      # hyprland.enable = false;
+      # niri.enable = true;
     };
   };
 

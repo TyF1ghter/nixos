@@ -11,7 +11,7 @@ in
 
     monitor = mkOption {
       type = types.str;
-      default = "desc:Samsung Display Corp. 0x414D,3456x2160@60,0x0,1.8";
+      default = "desc:Sharp Corporation 0x14F9,1920x1200@60,0x0,1";
       description = "Monitor configuration";
     };
 
@@ -35,6 +35,15 @@ in
   };
 
   config = mkIf cfg.enable {
+    # Automatically enable supporting modules for a complete desktop experience
+    modules = {
+      waybar.enable = true;
+      hyprlock.enable = true;
+      hyprpaper.enable = true;
+      dunst.enable = true;
+      wofi.enable = true;
+    };
+
     # Let Stylix manage theming by default
     stylix.targets.hyprland.enable = mkDefault true;
 
@@ -64,9 +73,7 @@ in
           "nm-applet"
           "dunst"
           "polkit_gnome"
-          "waybar"
           "hypridle"
-          "hyprpaper"
           "blueman-applet"
           "hyprshot"
           "hyprctl setcursor Adwaita 24"
@@ -74,7 +81,7 @@ in
           "~/.config/hypr/xdg-portal-hyprland"
           "dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP"
           "systemctl --user import-environment WAYLAND_DISPLAY XDG_CURRENT_DESKTOP"
-        ];
+        ] ++ optional config.modules.hyprpaper.enable "hyprpaper";
 
         # General settings
         general = {
@@ -193,11 +200,12 @@ in
           "$mainMod, SPACE, exec, wofi --show-drun"
           "$mainMod, ESCAPE, exec, wlogout"
           "$mainMod SHIFT, B, exec, mullvad-browser"
-          "$mainMod SHIFT, S, exec, steam"
+          "$mainMod SHIFT, S, exec, hyprshot -m region"
           "$mainMod SHIFT, D, exec, vesktop"
           "$mainMod SHIFT, J, exec, jellyfinmediaplaye"
-          "$mainMod SHIFT, W, exec, /home/nix/.config/hypr/scripts/win11.sh"
+          "$mainMod SHIFT, W, exec, $HOME/.config/hypr/scripts/win11.sh"
           "$mainMod SHIFT, F, fullscreen, 0"
+          "$mainMod CTRL,  S, exec, steam"
 
           # Focus movement
           "$mainMod, left, movefocus, l"

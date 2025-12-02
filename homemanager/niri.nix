@@ -1,266 +1,147 @@
-{ config, pkgs, lib, ... }:
+# This module configures the Niri and DankMaterialShell desktop environment.
+{ config, pkgs, lib, inputs, ... }:
 
-with lib;
-
-let
-  cfg = config.modules.niri;
-in
 {
-  options.modules.niri = {
-    enable = mkEnableOption "Niri window manager configuration";
+  imports = [
+    # Niri home-manager module (provides lib.niri.actions)
+    inputs.niri.homeModules.config
 
-    terminal = mkOption {
-      type = types.str;
-      default = "kitty";
-      description = "Default terminal emulator";
-    };
+    # DankMaterialShell modules
+    inputs.dankMaterialShell.homeModules.dankMaterialShell.default
+    inputs.dankMaterialShell.homeModules.dankMaterialShell.niri
+  ];
 
-    fileManager = mkOption {
-      type = types.str;
-      default = "thunar";
-      description = "Default file manager";
-    };
-
-    menu = mkOption {
-      type = types.str;
-      default = "wofi --show drun";
-      description = "Default application launcher";
-    };
-
-    preferDarkTheme = mkOption {
-      type = types.bool;
-      default = true;
-      description = "Prefer dark theme for applications";
-    };
-  };
-
-  config = mkIf cfg.enable {
-    # Let Stylix manage theming by default
-    stylix.targets.niri.enable = mkDefault true;
-
-    # Niri configuration
-    home.file.".config/niri/config.kdl".text = ''
-      // Niri Configuration
-      // https://github.com/YaLTeR/niri
-
-      // Input configuration
-      input {
-          keyboard {
-              xkb {
-                  layout "us"
-              }
-          }
-
-          touchpad {
-              tap
-              natural-scroll
-              dwt
-              dwtp
-          }
-
-          mouse {
-              natural-scroll
-          }
-
-          focus-follows-mouse
-      }
-
-      // Output configuration
-      output "eDP-1" {
-          scale 1.5
-          mode "3456x2160@60"
-      }
-
-      // Layout configuration
-      layout {
-          gaps 8
-          center-focused-column "never"
-
-          preset-column-widths {
-              proportion 0.33333
-              proportion 0.5
-              proportion 0.66667
-          }
-
-          default-column-width { proportion 0.5; }
-
-          focus-ring {
-              width 2
-              active-color "#7aa2f7"
-              inactive-color "#414868"
-          }
-
-          border {
-              width 1
-              active-color "#7aa2f7"
-              inactive-color "#414868"
-          }
-      }
-
-      // Spawn programs at startup
-      spawn-at-startup "${cfg.terminal}"
-      spawn-at-startup "waybar"
-      spawn-at-startup "dunst"
-      spawn-at-startup "nm-applet"
-      spawn-at-startup "blueman-applet"
-      spawn-at-startup "${pkgs.polkit_gnome}/libexec/polkit-gnome-authentication-agent-1"
-      // Note: swayidle is managed via systemd service (see swayidle.nix module)
-
-      // Prefer dark theme
-      prefer-no-csd
-
-      // Screenshots
-      screenshot-path "~/Pictures/Screenshots/screenshot-%Y-%m-%d_%H-%M-%S.png"
-
-      // Animation settings
-      animations {
-          slowdown 1.0
-
-          window-open {
-              duration-ms 150
-              curve "ease-out-quad"
-          }
-
-          window-close {
-              duration-ms 150
-              curve "ease-out-quad"
-          }
-
-          workspace-switch {
-              duration-ms 250
-              curve "ease-out-cubic"
-          }
-      }
-
-      // Window rules
-      window-rule {
-          match app-id=".*"
-          default-column-width { proportion 0.5; }
-      }
-
-      // Keybindings
-      binds {
-          // Mod key (Super/Windows key)
-          Mod+Q { spawn "${cfg.terminal}"; }
-          Mod+K { close-window; }
-          Mod+M { quit; }
-          Mod+E { spawn "${cfg.fileManager}"; }
-          Mod+R { spawn "${cfg.menu}"; }
-          Mod+Space { spawn "${cfg.menu}"; }
-          Mod+L { spawn "swaylock"; }
-          Mod+Escape { spawn "wlogout"; }
-          Mod+N { spawn "${cfg.terminal}" "nvim"; }
-
-          // Browser shortcuts
-          Mod+F { spawn "brave"; }
-          Mod+B { spawn "librewolf"; }
-          Mod+Shift+B { spawn "mullvad-browser"; }
-
-          // Focus movement
-          Mod+Left { focus-column-left; }
-          Mod+Right { focus-column-right; }
-          Mod+Up { focus-window-up; }
-          Mod+Down { focus-window-down; }
-          Mod+H { focus-column-left; }
-          Mod+L { focus-column-right; }
-          Mod+J { focus-window-down; }
-          Mod+K { focus-window-up; }
-
-          // Window movement
-          Mod+Shift+Left { move-column-left; }
-          Mod+Shift+Right { move-column-right; }
-          Mod+Shift+Up { move-window-up; }
-          Mod+Shift+Down { move-window-down; }
-          Mod+Shift+H { move-column-left; }
-          Mod+Shift+L { move-column-right; }
-          Mod+Shift+J { move-window-down; }
-          Mod+Shift+K { move-window-up; }
-
-          // Workspace switching
-          Mod+1 { focus-workspace 1; }
-          Mod+2 { focus-workspace 2; }
-          Mod+3 { focus-workspace 3; }
-          Mod+4 { focus-workspace 4; }
-          Mod+5 { focus-workspace 5; }
-          Mod+6 { focus-workspace 6; }
-          Mod+7 { focus-workspace 7; }
-          Mod+8 { focus-workspace 8; }
-          Mod+9 { focus-workspace 9; }
-
-          // Move window to workspace
-          Mod+Ctrl+1 { move-window-to-workspace 1; }
-          Mod+Ctrl+2 { move-window-to-workspace 2; }
-          Mod+Ctrl+3 { move-window-to-workspace 3; }
-          Mod+Ctrl+4 { move-window-to-workspace 4; }
-          Mod+Ctrl+5 { move-window-to-workspace 5; }
-          Mod+Ctrl+6 { move-window-to-workspace 6; }
-          Mod+Ctrl+7 { move-window-to-workspace 7; }
-          Mod+Ctrl+8 { move-window-to-workspace 8; }
-          Mod+Ctrl+9 { move-window-to-workspace 9; }
-
-          // Column width adjustment
-          Mod+Minus { set-column-width "-10%"; }
-          Mod+Plus { set-column-width "+10%"; }
-          Mod+Shift+Minus { set-window-height "-10%"; }
-          Mod+Shift+Plus { set-window-height "+10%"; }
-
-          // Workspace scrolling
-          Mod+WheelScrollDown { focus-workspace-down; }
-          Mod+WheelScrollUp { focus-workspace-up; }
-          Mod+Ctrl+Left { focus-workspace-down; }
-          Mod+Ctrl+Right { focus-workspace-up; }
-
-          // Maximize/fullscreen
-          Mod+Shift+F { maximize-column; }
-          Mod+Alt+F { fullscreen-window; }
-
-          // Screenshots
-          Print { screenshot; }
-          Mod+Print { screenshot-screen; }
-          Mod+Shift+Print { screenshot-window; }
-
-          // Media keys
-          XF86AudioRaiseVolume { spawn "wpctl" "set-volume" "@DEFAULT_AUDIO_SINK@" "5%+"; }
-          XF86AudioLowerVolume { spawn "wpctl" "set-volume" "@DEFAULT_AUDIO_SINK@" "5%-"; }
-          XF86AudioMute { spawn "wpctl" "set-mute" "@DEFAULT_AUDIO_SINK@" "toggle"; }
-          XF86AudioMicMute { spawn "wpctl" "set-mute" "@DEFAULT_AUDIO_SOURCE@" "toggle"; }
-          XF86MonBrightnessUp { spawn "brightnessctl" "s" "10%+"; }
-          XF86MonBrightnessDown { spawn "brightnessctl" "s" "10%-"; }
-          XF86AudioNext { spawn "playerctl" "next"; }
-          XF86AudioPrev { spawn "playerctl" "previous"; }
-          XF86AudioPlay { spawn "playerctl" "play-pause"; }
-          XF86AudioPause { spawn "playerctl" "play-pause"; }
-      }
-
-      // Debug settings (disable in production)
-      debug {
-          render-drm-device "/dev/dri/card0"
-      }
-    '';
-
-    # Additional packages for niri session
-    home.packages = with pkgs; [
-      niri
-    ];
-
-    # Session variables
-    home.sessionVariables = {
-      NIXOS_OZONE_WL = "1";
-      MOZ_ENABLE_WAYLAND = "1";
-      XDG_CURRENT_DESKTOP = "niri";
-      XDG_SESSION_TYPE = "wayland";
-      XCURSOR_SIZE = "24";
-      XCURSOR_THEME = "Adwaita";
-    };
-
-    # GTK settings
-    gtk = mkIf cfg.preferDarkTheme {
-      gtk3.extraConfig = {
-        gtk-application-prefer-dark-theme = 1;
+  config = {
+    # DankMaterialShell configuration
+    programs.dankMaterialShell = {
+      enable = true;
+      niri = {
+        enableKeybinds = true;
+        enableSpawn = true;
       };
-      gtk4.extraConfig = {
-        gtk-application-prefer-dark-theme = 1;
+    };
+
+    # Additional niri window rules and keybinds (merged with DankMaterialShell)
+    programs.niri.settings = {
+      # Disable client-side decorations (remove window title bars)
+      prefer-no-csd = true;
+
+      # Input configuration - disable natural scrolling for traditional scroll direction
+      input = {
+        mouse = {
+          natural-scroll = false;
+        };
+        touchpad = {
+          natural-scroll = false;
+          tap = true;
+          dwt = true;
+          dwtp = true;
+        };
       };
+
+      # Layout settings - default to half screen columns
+      layout = {
+        default-column-width = { proportion = 0.5; };
+      };
+
+      # Window rules for transparency
+      window-rules = [
+        {
+          draw-border-with-background = false;
+        }
+        # Vesktop transparency
+        {
+          matches = [
+            { app-id = "^vesktop$"; }
+          ];
+          opacity = 0.95;
+        }
+        # Spotify transparency
+        {
+          matches = [
+            { app-id = "^[Ss]potify$"; }
+          ];
+          opacity = 0.85;
+        }
+      ];
+    };
+
+    # Additional niri keybinds for window management (merged with DankMaterialShell)
+    programs.niri.settings.binds = with config.lib.niri.actions; {
+      # Power menu
+      "Mod+Escape".action = spawn "dms" "ipc" "powermenu" "toggle";
+
+      # Lock screen recovery - allows spawning swaylock even when locked
+      # This fixes the red screen issue when swaylock crashes
+      "Mod+CTRL+Alt+L" = {
+        allow-when-locked = true;
+        action = spawn "swaylock";
+      };
+
+      # Terminal and basic window management
+      "Mod+Q".action = spawn "kitty";
+      "Mod+T".action = spawn "alacritty";
+      "Mod+K".action = close-window;
+      "Mod+E".action = spawn "thunar";
+      "Mod+F".action = spawn "brave";
+      "Mod+B".action = spawn "librewolf";
+      "Mod+Shift+B".action = spawn "mullvad-browser";
+      "Mod+Shift+D".action = spawn "vesktop";
+
+      # Focus movement (vim keys)
+      "Mod+H".action = focus-column-left;
+      "Mod+J".action = focus-window-down;
+      "Mod+C".action = focus-window-up;
+      "Mod+L".action = focus-column-right;
+
+      # Focus movement (arrow keys)
+      "Mod+Left".action = focus-column-left;
+      "Mod+Right".action = focus-column-right;
+      "Mod+Up".action = focus-window-up;
+      "Mod+Down".action = focus-window-down;
+
+      # Window movement
+      "Mod+Shift+Left".action = move-column-left;
+      "Mod+Shift+Right".action = move-column-right;
+      "Mod+Shift+Up".action = move-window-up;
+      "Mod+Shift+Down".action = move-window-down;
+      "Mod+Alt+H".action = move-column-left;
+      "Mod+Alt+L".action = move-column-right;
+      "Mod+Alt+J".action = move-window-down;
+      "Mod+Alt+K".action = move-window-up;
+
+      # Workspace switching
+      "Mod+1".action.focus-workspace = 1;
+      "Mod+2".action.focus-workspace = 2;
+      "Mod+3".action.focus-workspace = 3;
+      "Mod+4".action.focus-workspace = 4;
+      "Mod+5".action.focus-workspace = 5;
+      "Mod+6".action.focus-workspace = 6;
+      "Mod+7".action.focus-workspace = 7;
+      "Mod+8".action.focus-workspace = 8;
+      "Mod+9".action.focus-workspace = 9;
+
+      # Move window to workspace
+      "Mod+Shift+1".action.move-window-to-workspace = 1;
+      "Mod+Shift+2".action.move-window-to-workspace = 2;
+      "Mod+Shift+3".action.move-window-to-workspace = 3;
+      "Mod+Shift+4".action.move-window-to-workspace = 4;
+      "Mod+Shift+5".action.move-window-to-workspace = 5;
+      "Mod+Shift+6".action.move-window-to-workspace = 6;
+      "Mod+Shift+7".action.move-window-to-workspace = 7;
+      "Mod+Shift+8".action.move-window-to-workspace = 8;
+      "Mod+Shift+9".action.move-window-to-workspace = 9;
+
+      # Window sizing
+      "Mod+Minus".action.set-column-width = "-10%";
+      "Mod+Equal".action.set-column-width = "+10%";
+
+      # Fullscreen and maximize
+      "Mod+Shift+F".action = fullscreen-window;
+      "Mod+Alt+F".action = maximize-column;
+
+      # Screenshot
+      "Mod+Shift+S".action = spawn "grim" "-g" "$(slurp)";
     };
   };
 }

@@ -15,10 +15,16 @@ in
   options.modules.hyprpaper = {
     enable = mkEnableOption "Hyprpaper wallpaper daemon";
 
-    wallpapers = mkOption {
+    defaultFileName = mkOption {
+      type = types.str;
+      default = "worldblue.png";
+      description = "Default wallpaper filename in the global wallpaper directory.";
+    };
+
+    extraWallpapers = mkOption {
       type = types.listOf types.str;
-      default = [ "${config.home.homeDirectory}/Pictures/worldblue.png" ];
-      description = "List of wallpaper paths to preload. Uses relative path from home directory.";
+      default = [];
+      description = "List of additional wallpaper filenames (relative to wallpaperDir) to preload.";
     };
 
     monitors = mkOption {
@@ -30,23 +36,14 @@ in
             description = "Monitor name (empty string for all monitors)";
           };
 
-          path = mkOption {
+          fileName = mkOption {
             type = types.str;
-            description = "Path to wallpaper for this monitor";
+            description = "Wallpaper filename for this monitor (relative to wallpaperDir)";
           };
         };
       });
-      default = [
-        {
-          monitor = "eDP-1";
-          path = "${config.home.homeDirectory}/Pictures/worldblue.png";
-        }
-        {
-          monitor = "";
-          path = "${config.home.homeDirectory}/Pictures/worldblue.png";
-        }
-      ];
-      description = "Monitor-specific wallpaper configurations. Paths use home directory variable for reproducibility.";
+      default = [];
+      description = "Monitor-specific wallpaper configurations. Uses filenames relative to wallpaperDir.";
     };
 
     splash = mkOption {
@@ -68,10 +65,15 @@ in
     ];
 
     xdg.configFile."hypr/hyprpaper.conf".text = ''
-      ${concatStringsSep "\n" preloadEntries}
+      # Preload default wallpaper
+      preload = ${config.wallpaperDir}/${cfg.defaultFileName}
+      ${concatStringsSep "\n" (map (f: "preload = ${config.wallpaperDir}/${f}") cfg.extraWallpapers)}
 
-      # Set wallpaper(s) for monitor(s)
-      ${concatStringsSep "\n" wallpaperEntries}
+      # Set default wallpaper for all monitors
+      wallpaper = *,${config.wallpaperDir}/${cfg.defaultFileName}
+
+      # Set monitor-specific wallpapers
+      ${concatStringsSep "\n" (map (m: "wallpaper = ${m.monitor},${config.wallpaperDir}/${m.fileName}") cfg.monitors)}
 
       # Enable splash text rendering over the wallpaper
       splash = ${boolToString cfg.splash}

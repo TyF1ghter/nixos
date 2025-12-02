@@ -11,11 +11,12 @@ in
   };
 
   config = mkIf cfg.enable {
+    stylix.enableReleaseChecks = false;
     stylix.targets = {
-      kitty.enable = true;
+      kitty.enable = false;
       kitty.variant256Colors = true;
       xfce.enable = true;
-      vesktop.enable = true;
+      vesktop.enable = true;  # Stylix handles TokyoNight theme, transparency via window rules
       hyprland.enable = true;
       hyprlock.enable = true;
       waybar.enable = true;

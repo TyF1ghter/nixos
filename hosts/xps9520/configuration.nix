@@ -1,5 +1,4 @@
-# Host-specific configuration for Dell XPS 9520
-{ config, pkgs, inputs, lib, ... }:
+{ config, pkgs, inputs, lib, username, ... }:
 
 {
   imports = [
@@ -83,7 +82,7 @@
   };
 
   # User account
-  users.users.nix = {
+  users.users.${username} = {
     isNormalUser = true;
     description = "nix";
     extraGroups = [ "networkmanager" "wheel" ];
@@ -93,8 +92,14 @@
   # Home Manager
   home-manager = {
     extraSpecialArgs = { inherit inputs; };
-    users = {
-      "nix" = import ../../home.nix;
+    users."${username}" = {
+      imports = [ ../../home.nix ];
+      config.modules = {
+        # Enable the DankMaterialShell Niri desktop environment
+        niri.enable = true;
+        # Disable other desktop environments
+        hyprland.enable = false; 
+      };
     };
   };
 
