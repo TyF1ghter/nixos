@@ -21,6 +21,7 @@
     waybar           # Status bar
     wofi             # Application launcher
     dunst            # Notification daemon
+    libnotify        # Notification tools (notify-send)
     swaylock         # Screen locker
     swayidle         # Idle daemon
     wlogout          # Logout menu

@@ -141,8 +141,14 @@ in
       "Mod+Shift+F".action = fullscreen-window;
       "Mod+Alt+F".action = maximize-column;
 
-      # Screenshot
-      "Mod+Shift+S".action = spawn "grim" "-g" "$(slurp)";
+      # Screenshot - area selection (saves to ~/Pictures/Screenshots/)
+      "Mod+Shift+S".action = spawn "sh" "-c" "mkdir -p ~/Pictures/Screenshots && grim -g \"$(slurp)\" ~/Pictures/Screenshots/screenshot-$(date +%Y%m%d-%H%M%S).png && notify-send 'Screenshot saved' 'Saved to ~/Pictures/Screenshots/'";
+
+      # Screenshot - full screen
+      "Mod+Print".action = spawn "sh" "-c" "mkdir -p ~/Pictures/Screenshots && grim ~/Pictures/Screenshots/screenshot-$(date +%Y%m%d-%H%M%S).png && notify-send 'Screenshot saved' 'Saved to ~/Pictures/Screenshots/'";
+
+      # Screenshot - area selection (copy to clipboard)
+      "Mod+Ctrl+S".action = spawn "sh" "-c" "grim -g \"$(slurp)\" - | wl-copy && notify-send 'Screenshot copied' 'Copied to clipboard'";
     };
   };
 }

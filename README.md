@@ -6,9 +6,11 @@ A beautiful, modular NixOS configuration supporting multiple machines with Hyprl
 
 ### Hyprland Desktop with Tokyo Night Theme
 ![Screenshot 1](screenshot1.png)
+![Screenshot 2](screenshot2.png)
 
 ### Niri Desktop with Development Environment
-![Screenshot 2](screenshot2.png)
+![Screenshot 3](screenshot3.png)
+![Screenshot 4](screenshot4.png)
 
 ## What is This?
 
