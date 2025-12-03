@@ -16,7 +16,7 @@ A beautiful, modular NixOS configuration supporting multiple machines with Hyprl
 
 This is a complete NixOS configuration that uses a **modular approach** to manage your system. Think of it like building blocks - you can enable or disable different features (modules) to customize your system exactly how you want it.
 
-**Perfect for:** Someone who has just installed NixOS minimal and wants a beautiful, functional desktop environment without manually configuring everything from scratch.
+**Perfect for:** Someone who has already installed NixOS minimal and wants to apply this beautiful, modular configuration to their system.
 
 ## What You Get
 
@@ -31,11 +31,9 @@ This is a complete NixOS configuration that uses a **modular approach** to manag
 ## Prerequisites
 
 You need to have:
-1. Booted into the NixOS minimal installer
+1. NixOS minimal already installed and running on your system
 2. An active internet connection
-3. Your drives partitioned and mounted at `/mnt`
-
-If you haven't partitioned yet, see the [Installation Guide](#installation-guide) below.
+3. Root/sudo access
 
 ---
 
@@ -144,49 +142,23 @@ home-manager.users.ty = {
 
 ## Installation Guide
 
-### Step 1: Partition Your Drive
-
-This example uses a single NVMe drive (`/dev/nvme0n1`). Adjust for your hardware.
-
-**Warning:** This erases all data on the drive!
+### Step 1: Clone This Repository
 
 ```bash
-# Open partitioning tool
-gdisk /dev/nvme0n1
-
-# Create:
-# 1. 512MB EFI partition (type EF00)
-# 2. Remaining space for root (type 8300)
-```
-
-**Format and mount:**
-```bash
-# Format partitions
-mkfs.fat -F 32 /dev/nvme0n1p1
-mkfs.ext4 /dev/nvme0n1p2
-
-# Mount root
-mount /dev/nvme0n1p2 /mnt
-
-# Mount boot
-mkdir -p /mnt/boot
-mount /dev/nvme0n1p1 /mnt/boot
-```
-
-### Step 2: Clone This Repository
-
-```bash
-# Install git
+# Install git if not already installed
 nix-shell -p git
 
-# Clone to /mnt/etc/nixos
-git clone https://github.com/TyF1ghter/nixos.git /mnt/etc/nixos
+# Backup your existing configuration (optional but recommended)
+sudo mv /etc/nixos /etc/nixos.backup
+
+# Clone to /etc/nixos
+sudo git clone https://github.com/TyF1ghter/nixos.git /etc/nixos
 
 # Navigate into it
-cd /mnt/etc/nixos
+cd /etc/nixos
 ```
 
-### Step 3: Create Your Host Configuration
+### Step 2: Create Your Host Configuration
 
 Copy the template to create your machine's configuration:
 
@@ -195,15 +167,23 @@ Copy the template to create your machine's configuration:
 cp -r hosts/template hosts/YOUR_HOSTNAME
 ```
 
-### Step 4: Generate Hardware Configuration
+### Step 3: Configure Hardware
 
-Let NixOS detect your hardware:
+You have two options:
 
+**Option A: Use your existing hardware configuration**
 ```bash
-nixos-generate-config --show-hardware-config > hosts/YOUR_HOSTNAME/hardware-configuration.nix
+# Copy your existing hardware config to your new host directory
+sudo cp /etc/nixos.backup/hardware-configuration.nix hosts/YOUR_HOSTNAME/
 ```
 
-### Step 5: Customize Your Configuration
+**Option B: Generate a new hardware configuration**
+```bash
+# Let NixOS detect your hardware
+sudo nixos-generate-config --show-hardware-config > hosts/YOUR_HOSTNAME/hardware-configuration.nix
+```
+
+### Step 4: Customize Your Configuration
 
 Edit your host's configuration file:
 
@@ -244,7 +224,7 @@ nano hosts/YOUR_HOSTNAME/configuration.nix
 - **Laptop**: Uncomment line 46 for laptop power management
 - **Desktop Environment**: Choose Hyprland or Niri (lines 118-123)
 
-### Step 6: Add Host to Flake
+### Step 5: Add Host to Flake
 
 Edit `flake.nix` to add your new host:
 
@@ -275,38 +255,46 @@ nixosConfigurations = {
 };
 ```
 
-### Step 7: Install NixOS
+### Step 6: Apply Your Configuration
 
-Run the installer:
+Build and apply your new configuration:
 
 ```bash
-nixos-install --flake .#YOUR_HOSTNAME
+sudo nixos-rebuild switch --flake .#YOUR_HOSTNAME
 ```
 
 This will:
-- Download all packages
-- Build your system
-- Install everything to `/mnt`
+- Download all required packages
+- Build your system with the new configuration
+- Apply changes immediately
 
-**Note:** First-time installation takes 15-30 minutes depending on your internet speed.
+**Note:** First-time build may take 15-30 minutes depending on your internet speed and the modules you've enabled.
 
-When prompted, set your user password.
+### Step 7: Set User Password (if creating new user)
 
-### Step 8: Reboot
+If you changed the username from the default, set your password:
+
+```bash
+sudo passwd YOUR_USERNAME
+```
+
+### Step 8: Reboot (Optional)
+
+For a clean start with all changes applied:
 
 ```bash
 reboot
 ```
 
-Remove the installation media and boot into your new NixOS system!
+After reboot, you'll be greeted by GDM with your new desktop environment!
 
 ---
 
 ## Post-Installation
 
-### First Boot
+### First Login
 
-You'll be greeted by GDM (login screen). Log in with your username and password.
+After applying the configuration (and optionally rebooting), you'll be greeted by GDM (login screen). Log in with your username and password.
 
 Choose your desktop environment:
 - **Hyprland** - Dynamic tiling with beautiful animations
@@ -314,7 +302,7 @@ Choose your desktop environment:
 
 ### Making Changes
 
-After installation, your configuration lives in `/etc/nixos`.
+Your configuration lives in `/etc/nixos`.
 
 **To modify your system:**
 
