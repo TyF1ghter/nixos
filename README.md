@@ -54,17 +54,23 @@ cd /mnt/etc/nixos
 
 This is where you will adapt the configuration to your specific hardware and preferences.
 
-### 1. Choose a Host Configuration
+### 1. Create Your Host Configuration
 
-This repository contains several host configurations under the `hosts/` directory. For a new installation, it is recommended to start with the `9310` configuration as it is the most up-to-date.
+This repository contains a `template` configuration under the `hosts/` directory. You should copy this template to create a new configuration for your specific machine. Replace `YOUR_HOSTNAME` with a unique identifier for your machine (e.g., its actual hostname).
+
+```bash
+cp -r hosts/template hosts/YOUR_HOSTNAME
+```
+
+Now, all further edits will be made within `hosts/YOUR_HOSTNAME/`.
 
 ### 2. Edit `configuration.nix`
 
-You need to edit the `hosts/9310/configuration.nix` file to match your system.
+You need to edit the `hosts/YOUR_HOSTNAME/configuration.nix` file to match your system.
 
 ```bash
 # Use nano to edit the file
-nano hosts/9310/configuration.nix
+nano hosts/YOUR_HOSTNAME/configuration.nix
 ```
 
 Here are the key things you need to change:
@@ -79,10 +85,10 @@ Here are the key things you need to change:
 NixOS can detect your hardware and generate a configuration file for it.
 
 ```bash
-nixos-generate-config --show-hardware-config > hosts/9310/hardware-configuration.nix
+nixos-generate-config --show-hardware-config > hosts/YOUR_HOSTNAME/hardware-configuration.nix
 ```
 
-This will create a `hardware-configuration.nix` file in the `hosts/9310` directory, which will be automatically included in your build.
+This will create a `hardware-configuration.nix` file in the `hosts/YOUR_HOSTNAME` directory, which will be automatically included in your build.
 
 ### 4. Edit `flake.nix`
 
@@ -93,18 +99,23 @@ The `flake.nix` file is the entry point for your configuration. You need to make
 nano flake.nix
 ```
 
-Look for the `nixosConfigurations` section. It should look like this:
+You need to add your new host to the `nixosConfigurations` section. Replace `YOUR_HOSTNAME` with the actual hostname you chose in step 3.1.
 
 ```nix
 nixosConfigurations = {
-  "9310" = nixpkgs.lib.nixosSystem {
-    # ...
+  YOUR_HOSTNAME = nixpkgs.lib.nixosSystem {
+    specialArgs = { inherit inputs; };
+    modules = [
+      ./hosts/YOUR_HOSTNAME/configuration.nix
+      # Add your hardware-configuration.nix here if it's not automatically imported
+      ./hosts/YOUR_HOSTNAME/hardware-configuration.nix
+    ];
   };
-  # ... other hosts
+  # ... other hosts if you have them
 };
 ```
 
-The name `"9310"` is the name of the host configuration we are using. You will use this name during installation.
+The name `YOUR_HOSTNAME` is the name of the host configuration you just created. You will use this name during installation.
 
 ## Step 4: Install NixOS
 
@@ -112,10 +123,10 @@ Now you are ready to install NixOS.
 
 ```bash
 # Run the installer
-nixos-install --flake .#9310
+nixos-install --flake .#YOUR_HOSTNAME
 ```
 
-**Note:** The `.#9310` at the end tells the installer to use the `9310` host configuration from your `flake.nix` file.
+**Note:** The `.#YOUR_HOSTNAME` at the end tells the installer to use the configuration for the host you defined in `flake.nix`.
 
 The installation will take some time as it downloads and builds all the packages.
 
@@ -134,7 +145,7 @@ You should now boot into your new NixOS system, configured with this repository.
 After rebooting, you will be greeted with the desktop environment. You can open a terminal and run the following command to apply any future changes you make to your configuration:
 
 ```bash
-sudo nixos-rebuild switch --flake /etc/nixos#9310
+sudo nixos-rebuild switch --flake /etc/nixos#YOUR_HOSTNAME
 ```
 
 Welcome to NixOS!
