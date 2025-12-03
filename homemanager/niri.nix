@@ -19,6 +19,10 @@ in
   ];
 
   config = mkIf cfg.enable {
+    # Auto-enable swaylock and swayidle for screen locking and idle management
+    modules.swaylock.enable = mkDefault true;
+    modules.swayidle.enable = mkDefault true;
+
     # DankMaterialShell configuration
     programs.dankMaterialShell = {
       enable = true;
@@ -78,6 +82,9 @@ in
     programs.niri.settings.binds = with config.lib.niri.actions; {
       # Power menu
       "Mod+Escape".action = spawn "dms" "ipc" "powermenu" "toggle";
+
+      # Lock screen
+      "Mod+Shift+L".action = spawn "swaylock";
 
       # Terminal and basic window management
       "Mod+Q".action = spawn "kitty";
