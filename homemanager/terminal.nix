@@ -28,7 +28,7 @@ in
       settings = {
         color_theme = cfg.theme;
         confirm_os_window_close = 0;
-        background_opacity = lib.mkForce cfg.opacity;
+        background_opacity = lib.mkDefault cfg.opacity;
       };
     };
   };

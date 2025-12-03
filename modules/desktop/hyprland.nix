@@ -20,6 +20,9 @@
   # Hypridle idle daemon
   services.hypridle.enable = true;
 
+  # Network manager applet for Hyprland
+  programs.nm-applet.enable = true;
+
   # System packages for Hyprland ecosystem
   environment.systemPackages = with pkgs; [
     # Hyprland core utilities
@@ -45,6 +48,10 @@
     # Configuration tools
     nwg-displays     # Display configuration
     nwg-look         # GTK theme configuration
+
+    # Network and Bluetooth management (for Hyprland)
+    networkmanagerapplet
+    blueman
 
     # Input utilities
     ydotool          # Input automation

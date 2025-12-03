@@ -22,5 +22,5 @@
   services.wg-netmanager.enable = true;
 
   programs.openvpn3.enable = true;
-  programs.nm-applet.enable = true;
+  # programs.nm-applet.enable = true;  # Moved to hyprland.nix - only needed for Hyprland
 }

@@ -44,6 +44,9 @@ in
       wofi.enable = true;
     };
 
+    services.blueman-applet.enable = true;
+    services.network-manager-applet.enable = true;
+
     # Let Stylix manage theming by default
     stylix.targets.hyprland.enable = mkDefault true;
 
@@ -70,11 +73,11 @@ in
 
         # Autostart
         exec-once = [
-          "nm-applet"
+          "systemctl --user start blueman-applet.service"
+          "systemctl --user start nm-applet.service"
           "dunst"
           "polkit_gnome"
           "hypridle"
-          "blueman-applet"
           "hyprshot"
           "hyprctl setcursor Adwaita 24"
           "systemctl --user start hyprland-session.target"

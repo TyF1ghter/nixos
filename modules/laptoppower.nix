@@ -8,6 +8,9 @@
   # Enable system power management
   powerManagement.enable = true;
 
+  # Enable UPower for battery monitoring
+  services.upower.enable = true;
+
   # Auto CPU frequency scaling for laptops
   # Automatically adjusts CPU frequency based on load and power state
   services.auto-cpufreq.enable = true;

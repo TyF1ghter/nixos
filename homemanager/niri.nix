@@ -1,7 +1,14 @@
-# This module configures the Niri and DankMaterialShell desktop environment.
 { config, pkgs, lib, inputs, ... }:
 
+with lib;
+let
+  cfg = config.modules.niri;
+in
 {
+  options.modules.niri = {
+    enable = mkEnableOption "Niri (DankMaterialShell) desktop environment";
+  };
+
   imports = [
     # Niri home-manager module (provides lib.niri.actions)
     inputs.niri.homeModules.config
@@ -11,7 +18,7 @@
     inputs.dankMaterialShell.homeModules.dankMaterialShell.niri
   ];
 
-  config = {
+  config = mkIf cfg.enable {
     # DankMaterialShell configuration
     programs.dankMaterialShell = {
       enable = true;
@@ -42,6 +49,7 @@
       # Layout settings - default to half screen columns
       layout = {
         default-column-width = { proportion = 0.5; };
+       # gaps = 5;
       };
 
       # Window rules for transparency
@@ -70,13 +78,6 @@
     programs.niri.settings.binds = with config.lib.niri.actions; {
       # Power menu
       "Mod+Escape".action = spawn "dms" "ipc" "powermenu" "toggle";
-
-      # Lock screen recovery - allows spawning swaylock even when locked
-      # This fixes the red screen issue when swaylock crashes
-      "Mod+CTRL+Alt+L" = {
-        allow-when-locked = true;
-        action = spawn "swaylock";
-      };
 
       # Terminal and basic window management
       "Mod+Q".action = spawn "kitty";

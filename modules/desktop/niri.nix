@@ -34,11 +34,8 @@
     nwg-displays     # Display configuration
     nwg-look         # GTK theme configuration
 
-    # Network management
-    networkmanagerapplet
-
-    # Bluetooth
-    blueman
+    # Network/Bluetooth management not needed - DankMaterialShell has built-in widgets
+    # (networkmanagerapplet and blueman are in hyprland.nix instead)
 
     # Polkit agent
     polkit_gnome

@@ -53,12 +53,6 @@
     ./homemanager/dankshell-tokyonight.nix
   ];
 
-  # --- Basic Home Manager Configuration ---
-  # These are common settings for all users.
-  # Username and homeDirectory are inferred from the host config.
-  home.stateVersion = "24.11";
-  programs.home-manager.enable = true;
-
   options = {
     wallpaperDir = lib.mkOption {
       type = lib.types.path;
@@ -67,9 +61,20 @@
     };
   };
 
-  # Define any other global settings, packages, or session variables here
-  # if you want them to apply to ALL hosts that use this file.
-  home.packages = [];
-  home.sessionVariables = {};
-  home.file = {};
+  config = {
+    # --- Basic Home Manager Configuration ---
+    # These are common settings for all users.
+    # Username and homeDirectory are inferred from the host config.
+    home.stateVersion = "24.11";
+    programs.home-manager.enable = true;
+
+    # Suppress version mismatch warnings for Stylix
+    stylix.enableReleaseChecks = false;
+
+    # Define any other global settings, packages, or session variables here
+    # if you want them to apply to ALL hosts that use this file.
+    home.packages = [];
+    home.sessionVariables = {};
+    home.file = {};
+  };
 }

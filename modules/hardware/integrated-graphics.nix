@@ -18,7 +18,7 @@
       libvdpau-va-gl        # VDPAU driver
 
       # AMD hardware acceleration (safe to include even on Intel systems)
-      mesa.drivers          # Mesa drivers including AMD
+      mesa                  # Mesa drivers including AMD
     ];
 
     # 32-bit driver support for compatibility
@@ -56,7 +56,6 @@
 
   # Install useful graphics utilities
   environment.systemPackages = with pkgs; [
-    glxinfo           # OpenGL information
     vulkan-tools      # Vulkan utilities (vulkaninfo, etc.)
     mesa-demos        # Mesa demos and glxgears
     libva-utils       # VA-API utilities (vainfo)

@@ -103,7 +103,7 @@
 
       # Add additional hosts here following the same pattern:
       # hostname = nixpkgs.lib.nixosSystem {
-      #   specialArgs = { inherit inputs; };
+      #   specialArgs = { inherit inputs; username = "someuser"; };
       #   system = "x86_64-linux";
       #   modules = [
       #     ./hosts/hostname/configuration.nix
@@ -113,9 +113,9 @@
       #       home-manager.useGlobalPkgs = true;
       #       home-manager.useUserPackages = true;
       #       home-manager.backupFileExtension = "hm-backup";
-          }
-        ];
-      };
+      #     }
+      #   ];
+      # };
     };
   };
 }

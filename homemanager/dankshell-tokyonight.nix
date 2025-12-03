@@ -11,6 +11,11 @@ in
   };
 
   config = mkIf cfg.enable {
+    # Add upower for battery monitoring
+    home.packages = with pkgs; [
+      upower
+    ];
+
     # DankMaterialShell settings managed by home-manager
     # Settings are always sourced from this nix configuration
     # GUI changes will NOT persist - edit this file to make permanent changes
@@ -132,14 +137,15 @@ ${builtins.toJSON {
       soundNewNotification = true;
       soundVolumeChanged = true;
       soundPluggedIn = true;
-      acMonitorTimeout = 300;
+      acMonitorTimeout = 5;
       acLockTimeout = 120;
       acSuspendTimeout = 0;
       acSuspendBehavior = 0;
-      batteryMonitorTimeout = 200;
+      batteryMonitorTimeout = 5;
       batteryLockTimeout = 100;
       batterySuspendTimeout = 0;
       batterySuspendBehavior = 0;
+      showBatteryPercentage = true;
       lockBeforeSuspend = false;
       preventIdleForMedia = true;
       loginctlLockIntegration = false;
@@ -307,7 +313,7 @@ EOF
 
         # Settings
         confirm_os_window_close = mkForce 0;
-        background_opacity = mkForce "0.85";
+        background_opacity = mkForce 0.85;
         background_blur = mkForce 20;
       };
     };

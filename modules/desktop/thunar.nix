@@ -10,8 +10,7 @@
     ];
   };
 
-  # Archive manager for Thunar
-  programs.file-roller.enable = true;
+
 
   # Required services for Thunar functionality
   services = {

@@ -30,6 +30,9 @@
     ../../modules/virtualization.nix
   ];
 
+  # Suppress version mismatch warnings for Stylix
+  stylix.enableReleaseChecks = false;
+
   # Networking
   networking.hostName = "9310";
 
@@ -98,8 +101,19 @@
     users.${username} = {
       imports = [ ../../home.nix ];
       config.modules = {
-        # Enable the DankMaterialShell Niri desktop environment
+        # --- Desktop Environment ---
         niri.enable = true;
+
+        # --- Core Components ---
+        nvchad.enable = true;
+        waybar.enable = true;
+        terminal.enable = true;
+        browsers.enable = true;
+        wofi.enable = true;
+        dunst.enable = true;
+
+        # --- Theming ---
+        dankshell-tokyonight.enable = true;
       };
     };
   };
@@ -200,7 +214,7 @@
 
     # Networking
     networkmanager
-    networkmanagerapplet
+    # networkmanagerapplet  # Moved to hyprland.nix - only needed for Hyprland
     networkmanager-vpnc
 
     # VPN & Security
@@ -223,8 +237,7 @@
   ];
 
   # Additional programs
-  programs.nm-applet.enable = true;
-  programs.waybar.enable = true;
+  # programs.nm-applet.enable = true; # Managed by desktop modules
 
   # Allow unfree packages
   nixpkgs.config.allowUnfree = true;
