@@ -98,7 +98,12 @@
         # Enable the DankMaterialShell Niri desktop environment
         niri.enable = false;
         # Disable other desktop environments
-        hyprland.enable = true; 
+        hyprland.enable = true;
+        vdesktop = {
+          enable = true;
+          opacity = 0.85;
+        };
+        stylix-config.enable = true;
       };
     };
   };

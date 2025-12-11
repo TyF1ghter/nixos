@@ -56,7 +56,7 @@
   options = {
     wallpaperDir = lib.mkOption {
       type = lib.types.path;
-      default = "/home/ty/nixos-repo/walls";
+      default = "${config.home.homeDirectory}/nixos/walls";
       description = "Directory where wallpapers are stored for use across modules.";
     };
   };

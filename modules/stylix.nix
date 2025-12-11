@@ -6,5 +6,6 @@
     base16Scheme = "${pkgs.base16-schemes}/share/themes/tokyo-night-storm.yaml";
     autoEnable = true;
     homeManagerIntegration.autoImport = true;
+    opacity.terminal = 0.8;
   };
 }

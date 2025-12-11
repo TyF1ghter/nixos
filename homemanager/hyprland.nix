@@ -42,6 +42,9 @@ in
       hyprpaper.enable = true;
       dunst.enable = true;
       wofi.enable = true;
+      terminal.enable = true;
+      nvchad.enable = true;
+
     };
 
     services.blueman-applet.enable = true;
@@ -84,7 +87,8 @@ in
           "~/.config/hypr/xdg-portal-hyprland"
           "dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP"
           "systemctl --user import-environment WAYLAND_DISPLAY XDG_CURRENT_DESKTOP"
-        ] ++ optional config.modules.hyprpaper.enable "hyprpaper";
+        ] ++ optional config.modules.hyprpaper.enable "hyprpaper"
+          ++ optional config.modules.waybar.enable "waybar";
 
         # General settings
         general = {
@@ -165,7 +169,7 @@ in
         # Misc settings
         misc = {
           force_default_wallpaper = 0;
-          disable_hyprland_logo = false;
+          disable_hyprland_logo = true;
         };
 
         # Input configuration

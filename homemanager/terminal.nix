@@ -9,12 +9,6 @@ in
   options.modules.terminal = {
     enable = mkEnableOption "Terminal configuration (kitty)";
 
-    theme = mkOption {
-      type = types.str;
-      default = "tokyo-night-storm";
-      description = "Color theme for terminal";
-    };
-
     opacity = mkOption {
       type = types.float;
       default = 0.8;
@@ -25,8 +19,8 @@ in
   config = mkIf cfg.enable {
     programs.kitty = {
       enable = true;
+      themeFile = "tokyo_night_storm";
       settings = {
-        color_theme = cfg.theme;
         confirm_os_window_close = 0;
         background_opacity = lib.mkDefault cfg.opacity;
       };
