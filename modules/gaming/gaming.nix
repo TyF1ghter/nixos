@@ -32,6 +32,6 @@
     protonup-ng
     mangohud
     mangojuice
-    unigine-heaven
+   # unigine-heaven
   ];
 }

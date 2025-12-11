@@ -96,9 +96,9 @@
       imports = [ ../../home.nix ];
       config.modules = {
         # Enable the DankMaterialShell Niri desktop environment
-        niri.enable = true;
+        niri.enable = false;
         # Disable other desktop environments
-        hyprland.enable = false; 
+        hyprland.enable = true; 
       };
     };
   };
@@ -123,7 +123,7 @@
     brave
     mullvad-browser
     librewolf
-    inputs.zen-browser.packages."${system}".default
+    inputs.zen-browser.packages."${pkgs.stdenv.hostPlatform.system}".default
 
     # Terminal
     kitty
