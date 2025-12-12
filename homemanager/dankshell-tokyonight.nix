@@ -137,11 +137,11 @@ ${builtins.toJSON {
       soundNewNotification = true;
       soundVolumeChanged = true;
       soundPluggedIn = true;
-      acMonitorTimeout = 5;
+      acMonitorTimeout = 300;
       acLockTimeout = 120;
       acSuspendTimeout = 0;
       acSuspendBehavior = 0;
-      batteryMonitorTimeout = 5;
+      batteryMonitorTimeout = 300;
       batteryLockTimeout = 100;
       batterySuspendTimeout = 0;
       batterySuspendBehavior = 0;

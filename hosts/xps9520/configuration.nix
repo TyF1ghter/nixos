@@ -17,6 +17,7 @@
 
     # Desktop modules
     ../../modules/desktop/hyprland.nix
+    ../../modules/desktop/niri.nix
     ../../modules/desktop/xdg.nix
     ../../modules/desktop/thunar.nix
 
@@ -94,16 +95,28 @@
     extraSpecialArgs = { inherit inputs; };
     users."${username}" = {
       imports = [ ../../home.nix ];
-      config.modules = {
-        # Enable the DankMaterialShell Niri desktop environment
-        niri.enable = false;
-        # Disable other desktop environments
-        hyprland.enable = true;
-        vdesktop = {
-          enable = true;
-          opacity = 0.85;
+      config = {
+        modules = {
+          # Enable the DankMaterialShell Niri desktop environment
+          niri.enable = true;
+          # Disable other desktop environments
+          hyprland.enable = false;
+          # DankMaterialShell theming
+          dankshell-tokyonight.enable = true;
+          hyprpaper.monitors = [
+            {
+              monitor = "eDP-1";
+              fileName = "worldblue.png";
+            }
+          ];
+          vdesktop = {
+            enable = true;
+            opacity = 0.85;
+          };
+          stylix-config.enable = true;
         };
-        stylix-config.enable = true;
+        # Disable Stylix's Hyprland background color to allow hyprpaper to show
+        stylix.targets.hyprland.enable = lib.mkForce false;
       };
     };
   };

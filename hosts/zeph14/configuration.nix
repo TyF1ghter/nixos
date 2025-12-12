@@ -31,7 +31,7 @@
     ../../modules/services/networking.nix
     ../../modules/services/display-manager.nix
     ../../modules/services/system-services.nix
-    ../../modules/services/asusd.nix
+    # ../../modules/services/asusd.nix  # File doesn't exist yet
 
     # === Desktop modules ===
     ../../modules/desktop/hyprland.nix
@@ -109,11 +109,14 @@
   };
 
   # Home Manager
-  home-manager.users.ty = {
-    imports = [ ../../home.nix ];
-    config.modules = {
-      niri.enable = true;
-      hyprland.enable = false;
+  home-manager = {
+    extraSpecialArgs = { inherit inputs; };
+    users.ty = {
+      imports = [ ../../home.nix ];
+      config.modules = {
+        niri.enable = true;
+        hyprland.enable = false;
+      };
     };
   };
 

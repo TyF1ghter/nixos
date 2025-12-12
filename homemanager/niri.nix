@@ -10,9 +10,8 @@ in
   };
 
   imports = [
-    # Niri home-manager module (provides lib.niri.actions)
-    inputs.niri.homeModules.config
-
+    # Niri flake home-manager module (provides config.lib.niri.actions)
+    inputs.niri.homeModules.niri
     # DankMaterialShell modules
     inputs.dankMaterialShell.homeModules.dankMaterialShell.default
     inputs.dankMaterialShell.homeModules.dankMaterialShell.niri
@@ -22,6 +21,11 @@ in
     # Auto-enable swaylock and swayidle for screen locking and idle management
     modules.swaylock.enable = mkDefault true;
     modules.swayidle.enable = mkDefault true;
+
+    # Override niri package to run tests sequentially (fixes "too many open files" error)
+    programs.niri.package = pkgs.niri.overrideAttrs (oldAttrs: {
+      dontUseCargoParallelTests = true;
+    });
 
     # DankMaterialShell configuration
     programs.dankMaterialShell = {

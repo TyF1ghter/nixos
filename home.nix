@@ -33,9 +33,10 @@
 
     # --- Desktop Environment Modules ---
     # (These are the "switches" for different desktops)
-    
+
     # Niri (DankMaterialShell version)
     ./homemanager/niri.nix
+    ./homemanager/niri-dank.nix
 
     # Hyprland
     ./homemanager/hyprland.nix

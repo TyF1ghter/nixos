@@ -102,7 +102,14 @@ in
     };
   };
 
-  config = mkIf cfg.enable {
+  # Auto-enable when niri is enabled (but allow manual override)
+  config = mkIf (cfg.enable || config.modules.niri.enable or false) {
+    # Disable modular components that conflict with DankMaterialShell
+    modules.swaylock.enable = mkForce false;  # Using niri-dank's integrated swaylock
+    modules.swayidle.enable = mkForce false;  # Using niri-dank's integrated swayidle
+    modules.dunst.enable = mkForce false;      # DMS has built-in notifications
+    modules.waybar.enable = mkForce false;     # DMS has built-in bar (DankBar)
+
     # Kitty terminal configuration (disabled by default - DankMaterialShell handles this)
     programs.kitty = mkIf cfg.terminal.enable {
       enable = true;
@@ -116,13 +123,13 @@ in
     # Niri window manager configuration
     # NOTE: Niri config.kdl is managed by DankMaterialShell
     programs.niri = {
-      package = pkgs.niri;
+      package = mkDefault pkgs.niri;
     };
 
     # Swaylock configuration - Modern DE-style lock screen
     programs.swaylock = mkIf cfg.swaylock.enable {
       enable = true;
-      package = pkgs.swaylock-effects;
+      package = mkDefault pkgs.swaylock-effects;
       settings = {
         # Screenshot and blur current screen (faster than loading wallpaper)
         screenshots = mkForce true;
@@ -198,10 +205,10 @@ in
     # Swayidle configuration - triggers swaylock directly
     services.swayidle = mkIf cfg.swayidle.enable {
       enable = true;
-      events = [
-        { event = "before-sleep"; command = "${pkgs.swaylock-effects}/bin/swaylock -f"; }
-        { event = "lock"; command = "${pkgs.swaylock-effects}/bin/swaylock -f"; }
-      ];
+      events = {
+        before-sleep = "${pkgs.swaylock-effects}/bin/swaylock -f";
+        lock = "${pkgs.swaylock-effects}/bin/swaylock -f";
+      };
       timeouts = [
         {
           timeout = cfg.swayidle.lockTimeout;
